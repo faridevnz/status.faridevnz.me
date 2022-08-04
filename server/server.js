@@ -17,7 +17,7 @@ app.options('*', (req, res) => {
 })
 
 app.get('/sites', async (req, res) => {
-  const direcories = await getDirectories('./../var/www/');
+  const direcories = await getDirectories('var/www/');
   res.send(direcories);
 });
 
@@ -94,7 +94,7 @@ app.listen(3333, () => {
   console.log('listening on port 3333');
   // PING THE ACTIVE SITES
   setInterval(async () => {
-    const direcories = await getDirectories('./../var/www/');
+    const direcories = await getDirectories('/var/www/');
     direcories.forEach((dir) => {
       // frontend check
       ping(`https://${dir}`).then(({ timestamp, value }) => {
