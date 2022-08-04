@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/faridevnz/server-monitoring-status#readme",
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "express": "^4.18.1"
   }
 }

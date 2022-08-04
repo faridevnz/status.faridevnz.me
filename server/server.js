@@ -2,8 +2,20 @@
 import { promises as pfs } from 'fs'
 import fs from 'fs';
 import axios from 'axios';
+import express from 'express';
 
+const app = express();
 const Axios = axios.create();
+
+// ROUTES
+
+app.get('/sites', async (req, res) => {
+  const direcories = await getDirectories('/var/www/');
+  res.send(direcories);
+})
+
+
+// FUNCTIONS
 
 Axios.interceptors.response.use(function (response) {
   response.config.metadata.endTime = new Date()
@@ -59,25 +71,26 @@ const savePingResult = (host, { timestamp, value }) => {
     content.failures.push(timestamp)
   }
   // trim the array
-  if (content.ping.length > 20) {
-    content.ping = content.ping.slice(-20);
+  if (content.ping.length > 30) {
+    content.ping = content.ping.slice(-30);
   }
   // save the new data
   fs.writeFileSync(`./ping-results/${host}.json`, JSON.stringify(content), 'utf-8')
 }
 
-
-// PING THE ACTIVE SITES
-
-setInterval(async () => {
-  const direcories = await getDirectories('/var/www/');
-  direcories.forEach((dir) => {
-    // frontend check
-    ping(`https://${dir}`).then(({ timestamp, value }) => {
-      // console.log(new Date().toLocaleString('it-IT', { timeZone: "Europe/Rome" }))
-      // save the ping status
-      savePingResult(dir, { timestamp, value });
-    });
-  })
-}, 60000);
-
+// LISTEN SERVER
+app.listen(3333, () => {
+  console.log('listening on port 3333');
+  // PING THE ACTIVE SITES
+  setInterval(async () => {
+    const direcories = await getDirectories('/var/www/');
+    direcories.forEach((dir) => {
+      // frontend check
+      ping(`https://${dir}`).then(({ timestamp, value }) => {
+        // console.log(new Date().toLocaleString('it-IT', { timeZone: "Europe/Rome" }))
+        // save the ping status
+        savePingResult(dir, { timestamp, value });
+      });
+    })
+  }, 60000);
+})

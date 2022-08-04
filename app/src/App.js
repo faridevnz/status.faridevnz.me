@@ -1,23 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import staging from './staging.faridevnz.me.json'
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const emptyItems = new Array(10).fill({ value: 0 });
+    setItems(emptyItems.concat(staging.ping));
+  }, [staging])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="card">
+        { items.map((item, index) =>
+          <div className={`item ${item.value === 0 ? 'item--light-grey' : ''} ${item.value > 0.035 ? 'item--orange' : 'item--green'} ${item.value === null ? 'item--red' : ''}`} key={index}></div>
+        ) }
+      </div>
     </div>
   );
 }
