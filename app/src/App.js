@@ -28,23 +28,24 @@ function App() {
   useEffect(() => {
     const temp = [];
     Object.entries(items).forEach(([siteName, items]) => {
-      temp.push({ siteName, items })
+      const a = 50 - items.length;
+      temp.push({ siteName, items: new Array(a).fill({value: 0}).concat(items) })
     })
     setParsedItems(temp)
   }, [items])
 
   return (
     <div>
-      { parsedItems.map((siteItem, index) => {
-        <>
+      { parsedItems.map((siteItem, index) => 
+        <div key={index}>
           <div className='sitename'>{ siteItem.siteName }</div>
           <div className="card" key={index}>
             { siteItem.items.map((item, index) =>
-              <div className={`item ${item.value === 0 ? 'item--light-grey' : ''} ${item.value > 0.035 ? 'item--orange' : 'item--green'} ${item.value === null ? 'item--red' : ''}`} key={index}></div>
+              <div className={`item ${item.value === 0 ? 'item--light-grey' : ''} ${item.value > 0.050 ? 'item--orange' : 'item--green'} ${item.value === null ? 'item--red' : ''}`} key={index}></div>
             ) }
           </div>
-        </>
-      }) }
+        </div>
+      ) }
     </div>
   );
 }
