@@ -9,7 +9,12 @@ const app = express();
 const Axios = axios.create();
 
 // ROUTES
-app.use(cors())
+app.use(cors({ origin: '*' }))
+
+app.options('*', (req, res) => {
+  console.log('OPTION');
+  res.send(true);
+})
 
 app.get('/sites', async (req, res) => {
   const direcories = await getDirectories('/var/www/');
