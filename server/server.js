@@ -12,8 +12,12 @@ const Axios = axios.create();
 app.get('/sites', async (req, res) => {
   const direcories = await getDirectories('/var/www/');
   res.send(direcories);
-})
+});
 
+app.get('/sites/:name', async (req, res) => {
+  const content = JSON.parse(fs.readFileSync(`./ping-results/${req.params.name}.json`, 'utf-8'));
+  res.send(content);
+})
 
 // FUNCTIONS
 
