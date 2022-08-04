@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     // fetch items
     sites.forEach(site => {
-      axios.get(`http://localhost:3333/sites/${site}`).then(res => {
+      axios.get(`https://status.faridevnz.me/api/sites/${site}`).then(res => {
         setItems((prevItems) => {
           return { ...prevItems, [site]: res.data.ping }
         })
@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     // take active sites
-    axios.get('http://localhost:3333/sites').then(res => {
+    axios.get('https://status.faridevnz.me/api/sites').then(res => {
       setSites(res.data);
     })
   }, [])
