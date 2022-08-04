@@ -1,3 +1,9 @@
+.sitename {
+  text-align: center;
+  font-size: 20px;
+  color: rgba(34, 34, 34)
+}
+
 .card {
   width: 100%;
   display: flex;
