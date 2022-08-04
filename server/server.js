@@ -79,5 +79,5 @@ setInterval(async () => {
       savePingResult(dir, { timestamp, value });
     });
   })
-}, 5000);
+}, 60000);
 
