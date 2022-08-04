@@ -17,7 +17,7 @@ app.options('*', (req, res) => {
 })
 
 app.get('/sites', async (req, res) => {
-  const direcories = await getDirectories('var/www/');
+  const direcories = await getDirectories('/var/www/');
   res.send(direcories);
 });
 
