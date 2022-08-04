@@ -3,11 +3,13 @@ import { promises as pfs } from 'fs'
 import fs from 'fs';
 import axios from 'axios';
 import express from 'express';
+import cors from 'cors';
 
 const app = express();
 const Axios = axios.create();
 
 // ROUTES
+app.use(cors())
 
 app.get('/sites', async (req, res) => {
   const direcories = await getDirectories('/var/www/');
