@@ -24,17 +24,14 @@ app.get('/sites', async (req, res) => {
   const sites = await getSites();
   const result = []
   sites.forEach((site) => {
+    const sitename = /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend';
     result.push({
       site, 
-      sitename: /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend' 
+      sitename,
+      tracking: JSON.parse(fs.readFileSync(`./ping-results/${sitename}.json`, 'utf-8'))
     })
   })
   res.send(result);
-});
-
-app.get('/sites/:name', async (req, res) => {
-  const content = JSON.parse(fs.readFileSync(`./ping-results/${req.params.name}.json`, 'utf-8'));
-  res.send(content);
 });
 
 
