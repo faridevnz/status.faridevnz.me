@@ -10,9 +10,9 @@ function App() {
   useEffect(() => {
     // fetch items
     sites.forEach(site => {
-      axios.get(`https://status.faridevnz.me/api/sites/${site}`).then(res => {
+      axios.get(`https://status.faridevnz.me/api/sites/${site.sitename}`).then(res => {
         setItems((prevItems) => {
-          return { ...prevItems, [site]: res.data.ping }
+          return { ...prevItems, [site.site]: res.data.ping }
         })
       })
     })

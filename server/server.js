@@ -22,7 +22,14 @@ app.use(cors({ origin: '*' }));
 
 app.get('/sites', async (req, res) => {
   const sites = await getSites();
-  res.send(sites);
+  const result = []
+  sites.forEach((site) => {
+    res.push({
+      site, 
+      sitename: /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend' 
+    })
+  })
+  res.send(result);
 });
 
 app.get('/sites/:name', async (req, res) => {
