@@ -41,7 +41,7 @@ function App() {
           <div className='sitename'>{ siteItem.siteName }</div>
           <div className="card" key={index}>
             { siteItem.items.map((item, index) =>
-              <div className={`item ${item.value === 0 ? 'item--light-grey' : ''} ${item.value > 0.050 ? 'item--orange' : 'item--green'} ${item.value === null ? 'item--red' : ''}`} key={index}></div>
+              <div className={`item ${item.value === 0 ? 'item--light-grey' : ''} ${item.value > 0.100 ? 'item--orange' : 'item--green'} ${item.value === null ? 'item--red' : ''}`} key={index}></div>
             ) }
           </div>
         </div>

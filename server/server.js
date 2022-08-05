@@ -5,32 +5,37 @@ import axios from 'axios';
 import express from 'express';
 import cors from 'cors';
 
+
+// VARIABLES
+
 const app = express();
 const Axios = axios.create();
+const defaultFileContent = {
+  ping: [],
+  failures: []
+}
+
 
 // ROUTES
-app.use(cors({ origin: '*' }))
 
-app.options('*', (req, res) => {
-  console.log('OPTION');
-  res.send(true);
-})
+app.use(cors({ origin: '*' }));
 
 app.get('/sites', async (req, res) => {
-  const direcories = await getDirectories('/var/www/');
-  res.send(direcories);
+  const sites = await getSites();
+  res.send(sites);
 });
 
 app.get('/sites/:name', async (req, res) => {
   const content = JSON.parse(fs.readFileSync(`./ping-results/${req.params.name}.json`, 'utf-8'));
   res.send(content);
-})
+});
+
 
 // FUNCTIONS
 
 Axios.interceptors.response.use(function (response) {
-  response.config.metadata.endTime = new Date()
-  response.duration = (response.config.metadata.endTime - response.config.metadata.startTime) / 1000
+  response.config.metadata.endTime = new Date();
+  response.duration = (response.config.metadata.endTime - response.config.metadata.startTime) / 1000;
   return response;
 }, function (error) {
   return Promise.reject(error);
@@ -38,16 +43,11 @@ Axios.interceptors.response.use(function (response) {
 
 Axios.interceptors.request.use(
   function (config) {
-    config.metadata = { startTime: new Date() }
+    config.metadata = { startTime: new Date() };
     return config;
 }, function (error) {
     return Promise.reject(error);
 });
-
-const defaultFileContent = {
-  ping: [],
-  failures: []
-}
 
 const ping = async (host, acceptedStatus = [200, 201]) => {
   return new Promise((resolve) => {
@@ -69,13 +69,33 @@ const getDirectories = async source =>
   )
   .map(dirent => dirent.name)
 
-const savePingResult = (host, { timestamp, value }) => {
+const getSites = async () => {
+  const sites = [];
+  // take directories
+  const directories = await getDirectories();
+  // for each directory identify frontend and backend
+  for ( let i = 0; i < directories.length; i++ ) {
+    // identify frontend
+    if ( fs.existsSync(`/var/www/${directories[i]}/app`) ) {
+      sites.push(directories[i]);
+    }
+    // identify backend
+    if ( fs.existsSync(`/var/www/${directories[i]}/server`) ) {
+      sites.push(`${directories[i]}/api/manage/info`);
+    }
+  }
+  return sites;
+}
+
+const savePingResult = (site, { timestamp, value }) => {
+  // determine sitename for frontend and backend
+  const sitename = /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend';
   // if file does not exists, create it ( host.json )
-  if (!fs.existsSync(`./ping-results/${host}.json`)) {
-    fs.writeFileSync(`./ping-results/${host}.json`, JSON.stringify(defaultFileContent), 'utf-8')
+  if (!fs.existsSync(`./ping-results/${sitename}.json`)) {
+    fs.writeFileSync(`./ping-results/${sitename}.json`, JSON.stringify(defaultFileContent), 'utf-8')
   }
   // append the result at the ping array
-  const content = JSON.parse(fs.readFileSync(`./ping-results/${host}.json`, 'utf-8'))
+  const content = JSON.parse(fs.readFileSync(`./ping-results/${sitename}.json`, 'utf-8'))
   content.ping.push({ timestamp, value });
   // save failures timestamp
   if (value === null) {
@@ -86,7 +106,7 @@ const savePingResult = (host, { timestamp, value }) => {
     content.ping = content.ping.slice(-50);
   }
   // save the new data
-  fs.writeFileSync(`./ping-results/${host}.json`, JSON.stringify(content), 'utf-8')
+  fs.writeFileSync(`./ping-results/${sitename}.json`, JSON.stringify(content), 'utf-8')
 }
 
 // LISTEN SERVER
@@ -94,13 +114,12 @@ app.listen(3333, () => {
   console.log('listening on port 3333');
   // PING THE ACTIVE SITES
   setInterval(async () => {
-    const direcories = await getDirectories('/var/www/');
-    direcories.forEach((dir) => {
-      // frontend check
-      ping(`https://${dir}`).then(({ timestamp, value }) => {
+    const sites = await getSites();
+    sites.forEach((site) => {
+      ping(`https://${site}`).then(({ timestamp, value }) => {
         // console.log(new Date().toLocaleString('it-IT', { timeZone: "Europe/Rome" }))
         // save the ping status
-        savePingResult(dir, { timestamp, value });
+        savePingResult(site, { timestamp, value });
       });
     })
   }, 60000);
