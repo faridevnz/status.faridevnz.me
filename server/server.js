@@ -37,6 +37,16 @@ app.get('/sites', async (req, res) => {
   res.send(result);
 });
 
+app.get('/sites/:site/logs', async (req, res) => {
+  // take the site log
+  const site = req.params.site;
+  const error_log = fs.readFileSync(`/var/www/${site}/logs/error.log`, 'utf-8');
+  const access_log = fs.readFileSync(`/var/www/${site}/logs/access.log`, 'utf-8');
+  res.send({
+    error: error_log,
+    access: access_log
+  })
+});
 
 // FUNCTIONS
 
