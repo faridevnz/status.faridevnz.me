@@ -24,8 +24,10 @@ app.get('/sites', async (req, res) => {
   const sites = await getSites();
   const result = []
   sites.forEach((site) => {
-    const sitename = /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend';
+    const type = /manage/.test(site) ? 'backend' : /preview/.test(site) ? 'preview' : 'frontend';
+    const sitename = type === 'backend' ? site.split('/')[0] + '.backend' : site + '.frontend';
     result.push({
+      type,
       site,
       uri: `https://${site}`,
       sitename,
