@@ -109,8 +109,8 @@ const savePingResult = (site, { timestamp, value }) => {
     content.failures.push(timestamp)
   }
   // trim the array
-  if (content.ping.length > 50) {
-    content.ping = content.ping.slice(-50);
+  if (content.ping.length > 80) {
+    content.ping = content.ping.slice(-80);
   }
   // save the new data
   fs.writeFileSync(`./ping-results/${sitename}.json`, JSON.stringify(content), 'utf-8')
