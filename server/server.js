@@ -72,7 +72,7 @@ const getDirectories = async source =>
 const getSites = async () => {
   const sites = [];
   // take directories
-  const directories = await getDirectories();
+  const directories = await getDirectories('/var/www');
   // for each directory identify frontend and backend
   for ( let i = 0; i < directories.length; i++ ) {
     // identify frontend
