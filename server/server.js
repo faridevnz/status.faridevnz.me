@@ -26,7 +26,8 @@ app.get('/sites', async (req, res) => {
   sites.forEach((site) => {
     const sitename = /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend';
     result.push({
-      site, 
+      site,
+      uri: `https://${site}`,
       sitename,
       tracking: JSON.parse(fs.readFileSync(`./ping-results/${sitename}.json`, 'utf-8'))
     })
