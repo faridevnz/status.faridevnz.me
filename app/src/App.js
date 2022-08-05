@@ -12,11 +12,13 @@ function App() {
     return new Array(rest).fill({ value: 0 }).concat(items);
   }
 
-  const onTakeErrorLog = (site) => {
-    axios.get(`https://status.faridevnz.me/api/sites/${site}/logs`).then(res => console.log(res.data.error))
+  const onTakeErrorLog = (site, type) => {
+    const host = site.split('/')[0] ?? site;
+    axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.error))
   }
-  const onTakeAccessLog = (site) => {
-    axios.get(`https://status.faridevnz.me/api/sites/${site}/logs`).then(res => console.log(res.data.access))
+  const onTakeAccessLog = (site, type) => {
+    const host = site.split('/')[0] ?? site;
+    axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.access))
   }
 
   useEffect(() => {
@@ -47,8 +49,8 @@ function App() {
                 <div className='card-header'>
                   <span>{ site.sitename.split('.')[0] }</span>
                   <span>
-                    <span className='log-link' onClick={() => onTakeErrorLog(site.site)}>error log</span>
-                    <span className='log-link' onClick={() => onTakeAccessLog(site.site)}>access log</span>
+                    <span className='log-link' onClick={() => onTakeErrorLog(site.site, 'frontend')}>error log</span>
+                    <span className='log-link' onClick={() => onTakeAccessLog(site.site, 'frontend')}>access log</span>
                   </span>
                 </div>
                 <div className="card" key={index}>
@@ -70,8 +72,8 @@ function App() {
                 <div className='card-header'>
                   <span>{ site.sitename.split('.')[0] }</span>
                   <span>
-                  <span className='log-link' onClick={() => onTakeErrorLog(site.site)}>error log</span>
-                    <span className='log-link' onClick={() => onTakeAccessLog(site.site)}>access log</span>
+                  <span className='log-link' onClick={() => onTakeErrorLog(site.site, 'backend')}>error log</span>
+                    <span className='log-link' onClick={() => onTakeAccessLog(site.site, 'backend')}>access log</span>
                   </span>
                 </div>
                 <div className="card" key={index}>
@@ -93,8 +95,8 @@ function App() {
                 <div className='card-header'>
                   <span>{ site.sitename.split('.')[0] }</span>
                   <span>
-                  <span className='log-link' onClick={() => onTakeErrorLog(site.site)}>error log</span>
-                    <span className='log-link' onClick={() => onTakeAccessLog(site.site)}>access log</span>
+                  <span className='log-link' onClick={() => onTakeErrorLog(site.site, 'preview')}>error log</span>
+                    <span className='log-link' onClick={() => onTakeAccessLog(site.site, 'preview')}>access log</span>
                   </span>
                 </div>
                 <div className="card" key={index}>

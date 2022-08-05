@@ -37,11 +37,11 @@ app.get('/sites', async (req, res) => {
   res.send(result);
 });
 
-app.get('/sites/:site/logs', async (req, res) => {
+app.get('/sites/:host/:type/logs', async (req, res) => {
   // take the site log
-  const site = req.params.site;
-  const error_log_path = /api/.test(site) ? `/var/www/${site}/server/logs/error.log` : `/var/www/${site}/logs/error.log`;
-  const access_log_path = /api/.test(site) ? `/var/www/${site}/server/logs/access.log` : `/var/www/${site}/logs/access.log`;
+  const host = req.params.host;
+  const error_log_path = req.params.type === 'backend' ? `/var/www/${host}/server/logs/error.log` : `/var/www/${host}/logs/error.log`;
+  const access_log_path = req.params.type === 'backend' ? `/var/www/${host}/server/logs/access.log` : `/var/www/${host}/logs/access.log`;
   res.send({
     error: fs.readFileSync(error_log_path, 'utf-8'),
     access: fs.readFileSync(access_log_path, 'utf-8')
