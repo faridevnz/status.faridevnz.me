@@ -24,7 +24,7 @@ app.get('/sites', async (req, res) => {
   const sites = await getSites();
   const result = []
   sites.forEach((site) => {
-    res.push({
+    result.push({
       site, 
       sitename: /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend' 
     })
