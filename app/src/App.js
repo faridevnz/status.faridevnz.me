@@ -12,6 +12,13 @@ function App() {
     return new Array(rest).fill({ value: 0 }).concat(items);
   }
 
+  const onTakeErrorLog = (site) => {
+    axios.get(`https://status.faridevnz.me/api/sites/${site}/logs`).then(res => console.log(res.data.error))
+  }
+  const onTakeAccessLog = (site) => {
+    axios.get(`https://status.faridevnz.me/api/sites/${site}/logs`).then(res => console.log(res.data.access))
+  }
+
   useEffect(() => {
     // take active sites
     axios.get('https://status.faridevnz.me/api/sites').then(res => {
@@ -37,8 +44,12 @@ function App() {
             <br />
             { frontends.map((site, index) => 
               <div key={index} className='item-ping-card'>
-                <div>
+                <div className='card-header'>
                   <span>{ site.sitename.split('.')[0] }</span>
+                  <span>
+                    <span className='log-link' onClick={() => onTakeErrorLog(site.site)}>error log</span>
+                    <span className='log-link' onClick={() => onTakeAccessLog(site.site)}>access log</span>
+                  </span>
                 </div>
                 <div className="card" key={index}>
                   { site.tracking.ping.map((ping, index) =>
@@ -56,8 +67,12 @@ function App() {
             <br />
             { backends.map((site, index) => 
               <div key={index} className='item-ping-card'>
-                <div>
+                <div className='card-header'>
                   <span>{ site.sitename.split('.')[0] }</span>
+                  <span>
+                  <span className='log-link' onClick={() => onTakeErrorLog(site.site)}>error log</span>
+                    <span className='log-link' onClick={() => onTakeAccessLog(site.site)}>access log</span>
+                  </span>
                 </div>
                 <div className="card" key={index}>
                   { site.tracking.ping.map((ping, index) =>
@@ -75,8 +90,12 @@ function App() {
             <br />
             { previews.map((site, index) => 
               <div key={index} className='item-ping-card'>
-                <div>
+                <div className='card-header'>
                   <span>{ site.sitename.split('.')[0] }</span>
+                  <span>
+                  <span className='log-link' onClick={() => onTakeErrorLog(site.site)}>error log</span>
+                    <span className='log-link' onClick={() => onTakeAccessLog(site.site)}>access log</span>
+                  </span>
                 </div>
                 <div className="card" key={index}>
                   { site.tracking.ping.map((ping, index) =>
