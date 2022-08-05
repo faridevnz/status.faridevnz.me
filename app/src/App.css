@@ -53,7 +53,7 @@
   color: white;
   font-size: 22px;
   font-weight: 700;
-  padding: 0 10px;
+  padding: 0 15px;
 }
 
 .card {
@@ -64,6 +64,10 @@
   margin: 10px 0;
 }
 
+.item-ping-card {
+  padding: 5px 0;
+}
+
 .item {
   width: 4px;
   height: 28px;
@@ -72,11 +76,11 @@
 }
 
 .item--orange {
-  background-color: #EFBF15;
+  background-color: #f3cb00d3;
 }
 
 .item--green {
-  background-color: #42EB33;
+  background-color: #00f9d8;
 }
 
 .item--light-grey {
@@ -84,5 +88,5 @@
 }
 
 .item--red {
-  background-color: #EB7533;
+  background-color: #f38600;
 }

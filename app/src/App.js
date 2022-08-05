@@ -36,7 +36,7 @@ function App() {
             <br />
             <br />
             { frontends.map((site, index) => 
-              <div key={index}>
+              <div key={index} className='item-ping-card'>
                 <div>
                   <span>{ site.sitename.split('.')[0] }</span>
                 </div>
@@ -55,7 +55,7 @@ function App() {
             <br />
             <br />
             { backends.map((site, index) => 
-              <div key={index}>
+              <div key={index} className='item-ping-card'>
                 <div>
                   <span>{ site.sitename.split('.')[0] }</span>
                 </div>
@@ -74,7 +74,7 @@ function App() {
             <br />
             <br />
             { previews.map((site, index) => 
-              <div key={index}>
+              <div key={index} className='item-ping-card'>
                 <div>
                   <span>{ site.sitename.split('.')[0] }</span>
                 </div>
