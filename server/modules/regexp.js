@@ -1,4 +1,4 @@
-import { loggerInfo } from "../server";
+import { loggerInfo } from "../server.js";
 
 export const match_groups = (string, REGEXP) => {
   let match;
