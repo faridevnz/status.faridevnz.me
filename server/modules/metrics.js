@@ -7,7 +7,7 @@ import { loggerInfo } from '../server.js';
 
 // CPU number
 const CORE_NUMBER_CMD = "lscpu | egrep ^CPU | tail -2 | head -1";
-const CORE_NUMBER_REGEXP = /CPU\(s\):\s* (\d+)/gm;
+const CORE_NUMBER_REGEXP = /:\s* (\d+)/gm;
 
 // cpus specs
 const CPU_SPECS_CMD = "cat /proc/cpuinfo | egrep 'vendor_id|cpu MHz|cache size'";
