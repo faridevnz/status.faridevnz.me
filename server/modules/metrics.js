@@ -39,7 +39,7 @@ const CURR_RUNNING_TASKS_REGEXP = /Tasks:\s+(\d+)\s+total,\s+(\d+)\s+running,\s+
  */
 export const core_number = () => {
   // run the command
-  const output = execSync(CORE_NUMBER_CMD);
+  const output = execSync(CORE_NUMBER_CMD, { encoding: 'utf-8' });
   loggerInfo.info(output);
   // match groups
   const groups = match_groups(output, CORE_NUMBER_REGEXP);
@@ -53,7 +53,7 @@ export const core_number = () => {
  */
 export const cpu_specs = () => {
   // run the command
-  const output = execSync(CPU_SPECS_CMD);
+  const output = execSync(CPU_SPECS_CMD, { encoding: 'utf-8' });
   // match groups ( expected example: [[GenuineIntel, GenuineIntel], [2494.140, 2494.140], [4096, 4096]] )
   const groups = [];
   CPU_SPECS_REGEXPS.forEach(regexp => groups.push(match_groups(output, regexp)));
@@ -71,7 +71,7 @@ export const cpu_specs = () => {
  */
 export const cpu_load = () => {
   // run the command
-  const output = execSync(CURR_CPU_LOAD_CMD);
+  const output = execSync(CURR_CPU_LOAD_CMD, { encoding: 'utf-8' });
   // match groups
   const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
   // return data
@@ -89,7 +89,7 @@ export const cpu_load = () => {
  */
 export const current_memory_info = () => {
   // run the command
-  const output = execSync(CURR_MEMORY_INFO_CMD);
+  const output = execSync(CURR_MEMORY_INFO_CMD, { encoding: 'utf-8' });
   // match groups
   const groups = match_groups(output, CURR_MEMORY_INFO_REGEXP);
   // return data
@@ -102,7 +102,7 @@ export const current_memory_info = () => {
  */
 export const current_running_tasks = () => {
   // run the command
-  const output = execSync(CURR_RUNNING_TASKS_CMD);
+  const output = execSync(CURR_RUNNING_TASKS_CMD, { encoding: 'utf-8' });
   // match groups
   const groups = match_groups(output, CURR_RUNNING_TASKS_REGEXP);
   // return data
