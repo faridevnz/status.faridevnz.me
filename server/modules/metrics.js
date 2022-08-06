@@ -35,7 +35,7 @@ const NET_USAGE_REGEXP = /eth0\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d
 
 // current TCP active connections
 const TCP_ACTIVE_CMD = 'netstat -ant | grep ESTABLISHED | grep 67.205.153.72:443';
-const TCP_ACTIVE_REGEXP = /tcp\s+\d+\s+\d+\s+67.205.153.72:443\d+(\d+\.\d+\.\d+\.\d+)/gm
+const TCP_ACTIVE_REGEXP = /tcp\s+\d+\s+\d+\s+67\.205\.153\.72:443\d+(\d+\.\d+\.\d+\.\d+)/gm
 
 // ----------
 // FUNCTIONS

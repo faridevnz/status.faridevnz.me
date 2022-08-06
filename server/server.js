@@ -64,22 +64,26 @@ app.get('/sites/:host/:type/logs', async (req, res) => {
 });
 
 app.get('/metrics', async (req, res) => {
+  const { total, ...memory_load } = current_memory_info();
   res.send({
     cpu: {
-      'specs': { 
+      specs: { 
         ...cpu_specs(), 
         core_num: core_number() 
       },
-      'load': cpu_load(),
+      load: cpu_load(),
     },
     ram: {
-      'load': current_memory_info(),
+      specs: {
+        total: total
+      },
+      load: memory_load,
     },
     metrics: {
-      'tasks': current_running_tasks(),
-      'network': {
-        'usage': network_usage(),
-        'active_tcp_connections': active_tcp_connections()
+      tasks: current_running_tasks(),
+      network: {
+        usage: network_usage(),
+        active_tcp_connections: active_tcp_connections()
       }
     }
   });
