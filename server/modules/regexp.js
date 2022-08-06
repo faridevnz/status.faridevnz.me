@@ -8,10 +8,10 @@ export const match_groups = (string, REGEXP) => {
         REGEXP.lastIndex++;
       }
       match.forEach((match, groupIndex) => {
-        loggerInfo.info({ 'MATCH': match });
         // skip all match and take only group
         if (groupIndex === 0) return;
         result.push(match);
       });
   }
+  return result;
 }

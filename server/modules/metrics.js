@@ -40,7 +40,6 @@ const CURR_RUNNING_TASKS_REGEXP = /Tasks:\s+(\d+)\s+total,\s+(\d+)\s+running,\s+
 export const core_number = () => {
   // run the command
   const output = execSync(CORE_NUMBER_CMD, { encoding: 'utf-8' });
-  loggerInfo.info(output);
   // match groups
   const groups = match_groups(output, CORE_NUMBER_REGEXP);
   // return data
