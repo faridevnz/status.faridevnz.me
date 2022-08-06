@@ -1,4 +1,4 @@
-import { match_groups } from './regexp';
+import { match_groups } from './regexp.js';
 
 // ----------
 // VARIABLES

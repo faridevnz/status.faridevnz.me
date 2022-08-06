@@ -4,7 +4,7 @@ import fs from 'fs';
 import axios from 'axios';
 import express from 'express';
 import cors from 'cors';
-import { core_number, cpu_load, cpu_specs, current_memory_info, current_running_tasks } from './modules/metrics';
+import { core_number, cpu_load, cpu_specs, current_memory_info, current_running_tasks } from './modules/metrics.js';
 
 
 // VARIABLES
