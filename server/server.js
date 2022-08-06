@@ -79,7 +79,7 @@ app.get('/metrics', async (req, res) => {
       },
       load: memory_load,
     },
-    metrics: {
+    stats: {
       tasks: current_running_tasks(),
       network: {
         usage: network_usage(),
