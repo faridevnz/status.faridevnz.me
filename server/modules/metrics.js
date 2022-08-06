@@ -76,9 +76,9 @@ export const cpu_load = () => {
   loggerInfo.info({ groups: groups });
   // return data
   const result = {};
-  for ( let i = 0; i < core_number() + 1; i++ ) {
-    const core_number = groups[i][0];
-    result[core_number] = { user: groups[i][1], nice: groups[i][2], system: groups[i][3], iowait: groups[i][4], steal: groups[i][5], idle: groups[i][6] };
+  for ( let i = 0; i < core_number(); i++ ) {
+    const core_number = groups[1 + (i)];
+    result[core_number] = { user: groups[1 + (i*7)], nice: groups[2 + (i*7)], system: groups[3 + (i*7)], iowait: groups[4 + (i*7)], steal: groups[5 + (i*7)], idle: groups[6 + (i*7)] };
   }
   return result;
 }
