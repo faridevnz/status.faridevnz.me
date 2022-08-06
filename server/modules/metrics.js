@@ -1,4 +1,5 @@
 import { match_groups } from './regexp.js';
+import { execSync } from 'child_process';
 
 // ----------
 // VARIABLES
