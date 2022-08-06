@@ -6,7 +6,15 @@ import express from 'express';
 import cors from 'cors';
 import { pinoHttp } from 'pino-http';
 import { pino } from 'pino';
-import { core_number, cpu_load, cpu_specs, current_memory_info, current_running_tasks } from './modules/metrics.js';
+import { 
+  core_number, 
+  cpu_load, 
+  cpu_specs, 
+  current_memory_info, 
+  current_running_tasks,
+  network_usage, 
+  active_tcp_connections
+} from './modules/metrics.js';
 
 export const loggerInfo = pino({ write: './logs/info.log' });
 export const loggerError = pino({ write: './logs/info.log' });
@@ -57,14 +65,22 @@ app.get('/sites/:host/:type/logs', async (req, res) => {
 
 app.get('/metrics', async (req, res) => {
   res.send({
-    info: {
-      'core_number': core_number(),
-      'cpu_specs': cpu_specs(),
+    cpu: {
+      'specs': { 
+        ...cpu_specs(), 
+        core_num: core_number() 
+      },
+      'load': cpu_load(),
+    },
+    ram: {
+      'load': current_memory_info(),
     },
     metrics: {
-      'cpu': cpu_load(),
-      'memory': current_memory_info(),
-      'tasks': current_running_tasks()
+      'tasks': current_running_tasks(),
+      'network': {
+        'usage': network_usage(),
+        'active_tcp_connections': active_tcp_connections()
+      }
     }
   });
 });

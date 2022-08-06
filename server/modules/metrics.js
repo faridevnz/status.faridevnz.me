@@ -29,6 +29,13 @@ const CURR_RUNNING_TASKS_CMD = 'top -bcn1 -w512 | head -2 | tail -1';
 const CURR_RUNNING_TASKS_REGEXP = /Tasks:\s+(\d+)\s+total,\s+(\d+)\s+running,\s+(\d+)\s+sleeping,\s+(\d+)\s+stopped,\s+(\d+)\s+zombie/gm;
 // total, running, sleeping, stopped, zombie
 
+// network usage
+const NET_USAGE_CMD = 'sar -n DEV 0 | head -5 | tail -1';
+const NET_USAGE_REGEXP = /eth0\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)/gm
+
+// current TCP active connections
+const TCP_ACTIVE_CMD = 'netstat -ant | grep ESTABLISHED | grep 67.205.153.72:443';
+const TCP_ACTIVE_REGEXP = /tcp\s+\d+\s+\d+\s+67.205.153.72:443\d+(\d+\.\d+\.\d+\.\d+)/gm
 
 // ----------
 // FUNCTIONS
@@ -107,4 +114,48 @@ export const current_running_tasks = () => {
   const groups = match_groups(output, CURR_RUNNING_TASKS_REGEXP);
   // return data
   return { total: groups[0], running: groups[1], sleeping: groups[2], stopped: groups[3], zombie: groups[4] };
+}
+
+/**
+ * NETWORK USAGE
+ * @returns 
+ * 
+ * rxpck/s    - packets received per second
+ * txpck/s    - packets transmitted per second
+ * rxkB/s     - kb received per second  
+ * txkB/s     - kb transmitted per second
+ * rxcmp/s    - packets compressed received per second  
+ * txcmp/s    - packets compressed transmitted per second
+ * rxmcst/s   - multicast packaets received per second
+ * %ifutil    - utilization percentage of the network interface
+ */
+export const network_usage = () => {
+  // run the command
+  const output = execSync(NET_USAGE_CMD, { encoding: 'utf-8' });
+  // match groups
+  const groups = match_groups(output, NET_USAGE_REGEXP);
+  // return data
+  return {
+    pack_rec_per_second: groups[0],
+    pack_sent_per_second: groups[1],
+    cpack_rec_per_second: groups[4],
+    cpack_sent_per_second: groups[5],
+    multicast_pack_rec_per_second: groups[6],
+    kb_rec_per_second: groups[2],
+    kb_sent_per_second: groups[3],
+    utilization_perc: groups[7],
+  }
+}
+
+/**
+ * ACTIVE TCP CONNECTIONS
+ * @returns 
+ */
+export const active_tcp_connections = () => {
+  // run the command
+  const output = execSync(TCP_ACTIVE_CMD, { encoding: 'utf-8' });
+  // match groups
+  const groups = match_groups(output, TCP_ACTIVE_REGEXP);
+  // return data
+  return groups;
 }
