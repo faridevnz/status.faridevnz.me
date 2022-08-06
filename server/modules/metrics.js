@@ -73,7 +73,7 @@ export const cpu_load = () => {
   const output = execSync(CURR_CPU_LOAD_CMD, { encoding: 'utf-8' });
   // match groups
   const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
-  loggerInfo.info(groups);
+  loggerInfo.info({ groups: groups });
   // return data
   const result = {};
   for ( let i = 0; i < core_number() + 1; i++ ) {
