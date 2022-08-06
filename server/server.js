@@ -4,7 +4,7 @@ import fs from 'fs';
 import axios from 'axios';
 import express from 'express';
 import cors from 'cors';
-import { execSync } from 'child_process';
+import { core_number, cpu_load, cpu_specs, current_memory_info, current_running_tasks } from './modules/metrics';
 
 
 // VARIABLES
@@ -17,7 +17,7 @@ const defaultFileContent = {
 }
 
 
-// ROUTES
+// ROUTES ( API )
 
 app.use(cors({ origin: '*' }));
 
@@ -50,31 +50,19 @@ app.get('/sites/:host/:type/logs', async (req, res) => {
 });
 
 app.get('/metrics', async (req, res) => {
-  const regex = /[\s\n]*([\d\.]+)[\s\n]*/gm;
-  const output = execSync('iostat | head -4 | tail -1', { encoding: 'utf-8' });  // the default is 'buffer'
-  // match grups
-  let m;
-  let result = [];
-  while ((m = regex.exec(output)) !== null) {
-      if (m.index === regex.lastIndex) {
-          regex.lastIndex++;
-      }
-      m.forEach((match, groupIndex) => {
-          if (groupIndex === 0) return;
-          result.push(match);
-      });
-  }
   res.send({
-    'avg-cpu': {
-      user: result[0],
-      nice: result[1],
-      system: result[2],
-      iowait: result[3],
-      steal: result[4],
-      idle: result[5]
-    } 
-  })
-})
+    info: {
+      'core_number': core_number(),
+      'cpu_specs': cpu_specs(),
+    },
+    metrics: {
+      'cpu': cpu_load(),
+      'memory': current_memory_info(),
+      'tasks': current_running_tasks()
+    }
+  });
+});
+
 
 // FUNCTIONS
 
