@@ -4,6 +4,7 @@ import fs from 'fs';
 import axios from 'axios';
 import express from 'express';
 import cors from 'cors';
+import { execSync } from 'child_process';
 
 
 // VARIABLES
@@ -47,6 +48,33 @@ app.get('/sites/:host/:type/logs', async (req, res) => {
     access: fs.readFileSync(access_log_path, 'utf-8')
   })
 });
+
+app.get('/metrics', async (req, res) => {
+  const regex = /[\s\n]*([\d\.]+)[\s\n]*/gm;
+  const output = execSync('iostat | head -4 | tail -1', { encoding: 'utf-8' });  // the default is 'buffer'
+  // match grups
+  let m;
+  let result = [];
+  while ((m = regex.exec(output)) !== null) {
+      if (m.index === regex.lastIndex) {
+          regex.lastIndex++;
+      }
+      m.forEach((match, groupIndex) => {
+          if (groupIndex === 0) return;
+          result.push(match);
+      });
+  }
+  res.send({
+    'avg-cpu': {
+      user: result[0],
+      nice: result[1],
+      system: result[2],
+      iowait: result[3],
+      steal: result[4],
+      idle: result[5]
+    } 
+  })
+})
 
 // FUNCTIONS
 
