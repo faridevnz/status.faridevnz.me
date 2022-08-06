@@ -8,8 +8,8 @@ import { pinoHttp } from 'pino-http';
 import { pino } from 'pino';
 import { core_number, cpu_load, cpu_specs, current_memory_info, current_running_tasks } from './modules/metrics.js';
 
-export const loggerInfo = pino({ write: __dirname + '/logs/info.log' });
-export const loggerError = pino({ write: __dirname + '/logs/info.log' });
+export const loggerInfo = pino({ write: './logs/info.log' });
+export const loggerError = pino({ write: './logs/info.log' });
 
 // VARIABLES
 
