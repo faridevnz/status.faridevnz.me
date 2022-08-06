@@ -5,7 +5,7 @@ import { execSync } from 'child_process';
 // VARIABLES
 
 // CPU number
-const CORE_NUMBER_CMD = "lscpu | egrep '^CPU\\(s\\):";
+const CORE_NUMBER_CMD = "lscpu | egrep '^CPU\\(s\\):'";
 const CORE_NUMBER_REGEXP = /CPU\(s\):\s* (\d+)/gm;
 
 // cpus specs
