@@ -4,8 +4,12 @@ import fs from 'fs';
 import axios from 'axios';
 import express from 'express';
 import cors from 'cors';
+import { pinoHttp } from 'pino-http';
+import { pino } from 'pino';
 import { core_number, cpu_load, cpu_specs, current_memory_info, current_running_tasks } from './modules/metrics.js';
 
+export const loggerInfo = pino({ write: __dirname + '/logs/info.log' });
+export const loggerError = pino({ write: __dirname + '/logs/info.log' });
 
 // VARIABLES
 
@@ -20,8 +24,10 @@ const defaultFileContent = {
 // ROUTES ( API )
 
 app.use(cors({ origin: '*' }));
+app.use(pinoHttp())
 
 app.get('/sites', async (req, res) => {
+  loggerInfo.info({a: 1}, 'hello');
   const sites = await getSites();
   const result = []
   sites.forEach((site) => {
