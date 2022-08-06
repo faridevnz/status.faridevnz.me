@@ -1,5 +1,5 @@
 import { match_groups } from './regexp.js';
-import { execSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import { loggerInfo } from '../server.js';
 
 // ----------
@@ -46,9 +46,10 @@ const TCP_ACTIVE_REGEXP = /tcp\s+\d+\s+\d+\s+67\.205\.153\.72:443\s+(\d+\.\d+\.\
  */
 export const core_number = () => {
   // run the command
-  const output = execSync(CORE_NUMBER_CMD, { encoding: 'utf-8' });
+  const output = spawnSync(CORE_NUMBER_CMD, { encoding: 'utf-8' });
+  if (output.error !== undefined) return 0;
   // match groups
-  const groups = match_groups(output, CORE_NUMBER_REGEXP);
+  const groups = match_groups(output.stdout, CORE_NUMBER_REGEXP);
   // return data
   return Number(groups[0]);
 }
@@ -59,10 +60,11 @@ export const core_number = () => {
  */
 export const cpu_specs = () => {
   // run the command
-  const output = execSync(CPU_SPECS_CMD, { encoding: 'utf-8' });
+  const output = spawnSync(CPU_SPECS_CMD, { encoding: 'utf-8' });
+  if (output.error !== undefined) return [];
   // match groups ( expected example: [[GenuineIntel, GenuineIntel], [2494.140, 2494.140], [4096, 4096]] )
   const groups = [];
-  CPU_SPECS_REGEXPS.forEach(regexp => groups.push(match_groups(output, regexp)));
+  CPU_SPECS_REGEXPS.forEach(regexp => groups.push(match_groups(output.stdout, regexp)));
   // return data
   const result = [];
   for ( let i = 0; i < core_number(); i++ ) {
@@ -77,9 +79,10 @@ export const cpu_specs = () => {
  */
 export const cpu_load = () => {
   // run the command
-  const output = execSync(CURR_CPU_LOAD_CMD, { encoding: 'utf-8' });
+  const output = spawnSync(CURR_CPU_LOAD_CMD, { encoding: 'utf-8' });
+  if (output.error !== undefined) return {};
   // match groups
-  const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
+  const groups = match_groups(output.stdout, CURR_CPU_LOAD_REGEXP);
   loggerInfo.info({ groups: groups });
   // return data
   const result = {};
@@ -96,9 +99,10 @@ export const cpu_load = () => {
  */
 export const current_memory_info = () => {
   // run the command
-  const output = execSync(CURR_MEMORY_INFO_CMD, { encoding: 'utf-8' });
+  const output = spawnSync(CURR_MEMORY_INFO_CMD, { encoding: 'utf-8' });
+  if (output.error !== undefined) return {};
   // match groups
-  const groups = match_groups(output, CURR_MEMORY_INFO_REGEXP);
+  const groups = match_groups(output.stdout, CURR_MEMORY_INFO_REGEXP);
   // return data
   return { total: groups[0], free: groups[1], used: groups[2], buff_or_cache: groups[3] };
 }
@@ -109,9 +113,10 @@ export const current_memory_info = () => {
  */
 export const current_running_tasks = () => {
   // run the command
-  const output = execSync(CURR_RUNNING_TASKS_CMD, { encoding: 'utf-8' });
+  const output = spawnSync(CURR_RUNNING_TASKS_CMD, { encoding: 'utf-8' });
+  if (output.error !== undefined) return {};
   // match groups
-  const groups = match_groups(output, CURR_RUNNING_TASKS_REGEXP);
+  const groups = match_groups(output.stdout, CURR_RUNNING_TASKS_REGEXP);
   // return data
   return { total: groups[0], running: groups[1], sleeping: groups[2], stopped: groups[3], zombie: groups[4] };
 }
@@ -131,9 +136,10 @@ export const current_running_tasks = () => {
  */
 export const network_usage = () => {
   // run the command
-  const output = execSync(NET_USAGE_CMD, { encoding: 'utf-8' });
+  const output = spawnSync(NET_USAGE_CMD, { encoding: 'utf-8' });
+  if (output.error !== undefined) return {};
   // match groups
-  const groups = match_groups(output, NET_USAGE_REGEXP);
+  const groups = match_groups(output.stdout, NET_USAGE_REGEXP);
   // return data
   return {
     pack_rec_per_second: groups[0],
@@ -153,9 +159,10 @@ export const network_usage = () => {
  */
 export const active_tcp_connections = () => {
   // run the command
-  const output = execSync(TCP_ACTIVE_CMD, { encoding: 'utf-8' });
+  const output = spawnSync(TCP_ACTIVE_CMD, { encoding: 'utf-8' });
+  if (output.error !== undefined) return [];
   // match groups
-  const groups = match_groups(output, TCP_ACTIVE_REGEXP);
+  const groups = match_groups(output.stdout, TCP_ACTIVE_REGEXP);
   // return data
   return groups;
 }
