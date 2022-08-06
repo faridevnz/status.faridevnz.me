@@ -68,8 +68,10 @@ app.get('/metrics', async (req, res) => {
   res.send({
     cpu: {
       specs: { 
-        ...cpu_specs(), 
-        core_num: core_number() 
+        core_num: core_number() ,
+        cores: {
+          ...cpu_specs(), 
+        },
       },
       load: cpu_load(),
     },
