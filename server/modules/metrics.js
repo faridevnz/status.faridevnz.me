@@ -46,9 +46,9 @@ const TCP_ACTIVE_REGEXP = /tcp\s+\d+\s+\d+\s+67\.205\.153\.72:443\s+(\d+\.\d+\.\
 
 // single command structure: { cmd: '', params: [] }
 const exec_command_pipe  = (commands = []) => {
-  const out = null;
+  let out = null;
   commands.forEach(command => {
-    const out = spawnSync(command.cmd, command.params, { input: out ? out.stdout : undefined, encoding: 'utf-8' });
+    out = spawnSync(command.cmd, command.params, { input: out ? out.stdout : undefined, encoding: 'utf-8' });
   });
   return out ? out.stdout : null;
 }
