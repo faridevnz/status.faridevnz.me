@@ -126,7 +126,7 @@ export const average_cpu_load = () => {
   // run the command
   const output = exec_command_pipe(CURR_CPU_LOAD_CMDS);
   if (!output) return 0;
-  loggerInfo.ingo({ ADD_LOG: output });
+  loggerInfo.info({ ADD_LOG: output });
   // match groups
   const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
   loggerInfo.info({ asd_groups: groups });
