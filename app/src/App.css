@@ -55,6 +55,13 @@
   font-weight: 700;
   padding: 0 15px;
 }
+.section-subtitle {
+  background-color: #f3cb00d3;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 0 15px;
+}
 
 .card {
   width: 100%;

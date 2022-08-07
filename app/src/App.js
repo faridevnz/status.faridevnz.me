@@ -3,9 +3,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function App() {
+  // sites
   const [frontends, setFrontends] = useState([]);
   const [backends, setBackends] = useState([]);
   const [previews, setPreviews] = useState([]);
+  // metrics
+  const [metrics, setMetrics] = useState({});
+  // current IP
+  const [IP, setIP] = useState({});
 
   const exact70 = (items = []) => {
     const rest = 80 - items.length;
@@ -21,6 +26,15 @@ function App() {
     axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.access))
   }
 
+  // mappers
+  const map_tcp_connections = (connections = []) => {
+    return connections.reduce((acc, ip) => {
+      if (acc[`${ip}`] !== undefined) acc[`${ip}`]++;
+      else acc[`${ip}`] = 1;
+      return acc;
+    }, {});
+  }
+
   useEffect(() => {
     // take active sites
     axios.get('https://status.faridevnz.me/api/sites').then(res => {
@@ -28,6 +42,30 @@ function App() {
       setBackends(res.data.filter((site) => site.type === 'backend').map(item => ({ ...item, tracking: { ...item.tracking, ping: exact70(item.tracking.ping) }})));
       setPreviews(res.data.filter((site) => site.type === 'preview').map(item => ({ ...item, tracking: { ...item.tracking, ping: exact70(item.tracking.ping) }})));
     });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // take the current IP
+      axios.get('https://geolocation-db.com/json/').then(res => {
+        setIP(res.data.IPv4);
+      });
+      // take metrics
+      axios.get('https://status.faridevnz.me/api/metrics').then(res => {
+        const tcp_conn = map_tcp_connections(res.data.stats.network.active_tcp_connections);
+        setMetrics({ 
+          ...res.data, 
+          stats: { 
+            ...res.data.stats, 
+            network: { 
+              ...res.data.stats.network, 
+              active_tcp_connections: tcp_conn
+            } 
+          } 
+        });
+      })
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -109,7 +147,36 @@ function App() {
           </div>
           {/* METRICS */}
           <div className='section-col'>
-            <span className='section-title'>METRICS</span>
+            <div>
+              <span className='section-title'>METRICS</span>
+            </div>
+            <br />
+            <span className='section-subtitle'>CPU</span>
+            { Object.entries(metrics?.cpu?.specs.cores ?? {}).map(([core_name, specs]) => 
+              <div key={core_name}>Core {core_name} - vendor: { specs.vendor_id } cache: { specs.cache_size } - { specs.frequency }</div>
+            ) }
+            <br />
+            <br />
+            <span className='section-subtitle'>RAM</span>
+            <br />
+            <br />
+            <span className='section-subtitle'>STATS</span>
+            <br />
+            <br />
+            <div>TASKS</div>
+            <br />
+            <div>total: { metrics?.stats?.tasks.total }</div>
+            <div>running: { metrics?.stats?.tasks.running }</div>
+            <div>sleeping: { metrics?.stats?.tasks.sleeping }</div>
+            <div>stopped: { metrics?.stats?.tasks.stopped }</div>
+            <div>zombie: { metrics?.stats?.tasks.zombie }</div>
+            <br />
+            <br />
+            <div>TPC CONNECTIONS</div>
+            { Object.entries(metrics?.stats?.network.active_tcp_connections ?? {}).map(([ip, count]) => 
+              <div key={ip}>{ ip } - { count } { ip === IP ? '- current': '' }</div>
+            ) }
+            <br />
           </div>
         </div>
       </div>
