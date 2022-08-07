@@ -80,6 +80,7 @@ export const cpu_specs = () => {
   // const output = spawnSync(CPU_SPECS_CMD, { encoding: 'utf-8' });
   const output = exec_command_pipe(CPU_SPECS_CMDS);
   if (!output) return 0;
+  loggerInfo.info({ "CPU SPECS OUTPUT": output });
   // match groups ( expected example: [[GenuineIntel, GenuineIntel], [2494.140, 2494.140], [4096, 4096]] )
   const groups = [];
   CPU_SPECS_REGEXPS.forEach(regexp => groups.push(match_groups(output, regexp)));
