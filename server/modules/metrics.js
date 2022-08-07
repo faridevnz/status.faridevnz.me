@@ -16,11 +16,16 @@ const CPU_SPECS_CMDS = [{ cmd: 'cat', params: ['/proc/cpuinfo'] }, { cmd: 'egrep
 const CPU_SPECS_REGEXPS = [/vendor_id[\s:]*(\w+)/gm, /cpu\sMHz[\s:]*(\d+\.\d+)/gm, /cache\ssize[\s:]*(\d+\s+)KB/gm];
 // vendir_id, cpu MHz, cache size in KB
 
-// current cpus % load
-// const CURR_CPU_LOAD_CMD = 'sar -P ALL 0';
-const CURR_CPU_LOAD_CMDS = [{ cmd: 'sar', params: ['-P', 'ALL', '0'] }];
-const CURR_CPU_LOAD_REGEXP = /(\d+|all)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+/gm;
+// average cpus % load
+// const AVG_CPU_LOAD_CMD = 'sar -P ALL 0';
+const AVG_CPU_LOAD_CMDS = [{ cmd: 'sar', params: ['-P', 'ALL', '0'] }];
+const AVG_CPU_LOAD_REGEXP = /(\d+|all)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+/gm;
 // CPU, user, nice, system, iowait, steal, idle
+
+// average cpus % load
+// const CURR_CPU_LOAD_CMD = 'top -bcn1 -1 -w512 | grep '^%Cpu'';
+const CURR_CPU_LOAD_CMDS = [{ cmd: 'top', params: ['-bcn1', '-1', '-w512'] }, { cmd: 'grep', params: ['^%Cpu'] }];
+const CURR_CPU_LOAD_REGEXP = /:\s+(\d+\.\d+)\sus,\s+(\d+\.\d+)\ssy,\s+(\d+\.\d+)\sni,\s+(\d+\.\d+)\sid,\s+(\d+\.\d+)\swa,\s+(\d+\.\d+)\shi,\s+(\d+\.\d+)\ssi,\s+(\d+\.\d+)\sst/gm;
 
 // current memory usage
 // const CURR_MEMORY_INFO_CMD = 'top -bcn1 -w512 | head -4 | tail -1';
@@ -93,16 +98,16 @@ export const cpu_specs = () => {
 }
 
 /**
- * CPU LOAD ( average and per core )
+ * AVERAGE CPU LOAD
  * @returns 
  */
-export const cpu_load = () => {
+export const average_cpu_load = () => {
   // run the command
-  // const output = spawnSync(CURR_CPU_LOAD_CMD, { encoding: 'utf-8' });
-  const output = exec_command_pipe(CURR_CPU_LOAD_CMDS);
+  // const output = spawnSync(AVG_CPU_LOAD_CMD, { encoding: 'utf-8' });
+  const output = exec_command_pipe(AVG_CPU_LOAD_CMDS);
   if (!output) return 0;
   // match groups
-  const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
+  const groups = match_groups(output, AVG_CPU_LOAD_REGEXP);
   loggerInfo.info({ groups: groups });
   // return data
   const result = {};
@@ -111,6 +116,28 @@ export const cpu_load = () => {
     result[core_number] = { user: groups[1 + (i*7)], nice: groups[2 + (i*7)], system: groups[3 + (i*7)], iowait: groups[4 + (i*7)], steal: groups[5 + (i*7)], idle: groups[6 + (i*7)] };
   }
   return result;
+}
+
+/**
+ * CURRENT CPU LOAD
+ * @returns 
+ */
+ export const current_cpu_load = () => {
+  // run the command
+  const output = exec_command_pipe(CURR_CPU_LOAD_CMDS);
+  if (!output) return 0;
+  loggerInfo.ingo({ ADD_LOG: output });
+  // match groups
+  const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
+  loggerInfo.info({ asd_groups: groups });
+  // return data
+  // const result = {};
+  // for ( let i = 0; i < core_number() + 1; i++ ) {
+  //   const core_number = groups[0 + (i*7)];
+  //   result[core_number] = { user: groups[1 + (i*7)], nice: groups[2 + (i*7)], system: groups[3 + (i*7)], iowait: groups[4 + (i*7)], steal: groups[5 + (i*7)], idle: groups[6 + (i*7)] };
+  // }
+  // return result;
+  return {};
 }
 
 /**

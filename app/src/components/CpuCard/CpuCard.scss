@@ -1,0 +1,39 @@
+.CpuCard {
+  width: 220px;
+  height: 100px;
+  background-color: white;
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  grid-template-rows: 1fr;
+  border-radius: 7px;
+  position: relative;
+
+  &__image {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      height: 40%;
+      width: 100%;
+    }
+  }
+
+  &__bar-container {
+    height: 3px;
+    position: absolute;
+    background-color: #F4F4F4;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+  }
+  &__bar {
+    height: 3px;
+    position: absolute;
+    bottom: 0;
+    left: 0px;
+  }
+
+}

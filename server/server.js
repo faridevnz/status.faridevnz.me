@@ -8,7 +8,8 @@ import { pinoHttp } from 'pino-http';
 import { pino } from 'pino';
 import { 
   core_number, 
-  cpu_load, 
+  average_cpu_load, 
+  current_cpu_load,
   cpu_specs, 
   current_memory_info, 
   current_running_tasks,
@@ -73,7 +74,10 @@ app.get('/metrics', async (req, res) => {
           ...cpu_specs(), 
         },
       },
-      load: cpu_load(),
+      load: {
+        average: average_cpu_load(),
+        current: current_cpu_load()
+      },
     },
     ram: {
       specs: {
