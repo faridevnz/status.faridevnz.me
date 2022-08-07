@@ -12,7 +12,7 @@ const CORE_NUMBER_REGEXP = /:\s* (\d+)/gm;
 
 // cpus specs
 // const CPU_SPECS_CMD = "cat /proc/cpuinfo | egrep 'vendor_id|cpu MHz|cache size'";
-const CPU_SPECS_CMDS = [{ cmd: 'cat', params: ['/proc/cpuinfo'] }, { cmd: 'egrep', params: ['vendor_id|cpu\s+MHz|cache\s+size'] }];
+const CPU_SPECS_CMDS = [{ cmd: 'cat', params: ['/proc/cpuinfo'] }, { cmd: 'egrep', params: ['vendor_id|cpu MHz|cache size'] }];
 const CPU_SPECS_REGEXPS = [/vendor_id[\s:]*(\w+)/gm, /cpu\sMHz[\s:]*(\d+\.\d+)/gm, /cache\ssize[\s:]*(\d+\s+)KB/gm];
 // vendir_id, cpu MHz, cache size in KB
 
