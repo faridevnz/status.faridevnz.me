@@ -173,7 +173,7 @@ function App() {
                   vendor={specs.vendor_id} 
                   cache={specs.chace_size} 
                   frequency={specs.frequency}
-                  load={100 - metrics.cpu.load[core_name].idle}
+                  load={100 - metrics.cpu.load.current[core_name].idle}
                 />
               ) }
             </div>
