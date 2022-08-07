@@ -25,7 +25,7 @@ const AVG_CPU_LOAD_REGEXP = /(\d+|all)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+
 // average cpus % load
 // const CURR_CPU_LOAD_CMD = 'top -bcn1 -1 -w512 | grep '^%Cpu'';
 const CURR_CPU_LOAD_CMDS = [{ cmd: 'top', params: ['-bcn1', '-1', '-w512'] }, { cmd: 'grep', params: ['^%Cpu'] }];
-const CURR_CPU_LOAD_REGEXP = /:\s+(\d+\.\d+)\sus,\s+(\d+\.\d+)\ssy,\s+(\d+\.\d+)\sni,\s+(\d+\.\d+)\sid,\s+(\d+\.\d+)\swa,\s+(\d+\.\d+)\shi,\s+(\d+\.\d+)\ssi,\s+(\d+\.\d+)\sst/gm;
+const CURR_CPU_LOAD_REGEXP = /(\d+\.\d+)\s*us,\s*(\d+\.\d+)\ssy,\s*(\d+\.\d+)\sni,\s*(\d+\.\d+)\sid,\s*(\d+\.\d+)\s*wa,\s*(\d+\.\d+)\s*hi,\s*(\d+\.\d+)\ssi,\s*(\d+\.\d+)\sst\s*/gm;
 
 // current memory usage
 // const CURR_MEMORY_INFO_CMD = 'top -bcn1 -w512 | head -4 | tail -1';
