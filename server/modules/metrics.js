@@ -131,13 +131,12 @@ export const average_cpu_load = () => {
   const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
   loggerInfo.info({ asd_groups: groups });
   // return data
-  // const result = {};
-  // for ( let i = 0; i < core_number() + 1; i++ ) {
-  //   const core_number = groups[0 + (i*7)];
-  //   result[core_number] = { user: groups[1 + (i*7)], nice: groups[2 + (i*7)], system: groups[3 + (i*7)], iowait: groups[4 + (i*7)], steal: groups[5 + (i*7)], idle: groups[6 + (i*7)] };
-  // }
-  // return result;
-  return {};
+  const result = {};
+  for ( let i = 0; i < core_number(); i++ ) {
+    const core_number = i;
+    result[core_number] = { user: groups[0 + (i*8)], system: groups[1 + (i*8)], nice: groups[2 + (i*8)], idle: groups[3 + (i*8)], iowait: groups[4 + (i*8)], hw_interrupts: groups[5 + (i*8)], sw_interrupts: groups[6 + (i*8)], stolen: groups[7 + (i*8)] };
+  }
+  return result;
 }
 
 /**
