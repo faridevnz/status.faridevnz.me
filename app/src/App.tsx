@@ -72,7 +72,7 @@ function App() {
         <span className='title'>Wundart</span><span className='subtitle'>system status</span>
       </div>
       <div className='content'>
-        <div className='section-container'>
+        <div className='section-container flex flex-col lg:grid'>
           {/* FRONTEND AND BACKEND AND PREVIEW */}
           <div className='section-col ping-section'>
             {/* FRONTEND */}
