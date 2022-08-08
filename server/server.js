@@ -71,19 +71,18 @@ app.get('/sites/:host/:type/logs', async (req, res) => {
 });
 
 app.get('/metrics', async (req, res) => {
-  const [memory_info, core_num, core_cpu_specs, average, current, tasks, usage, tcp_connections] = await Promise.all([current_memory_info(), core_number(), cpu_specs(), average_cpu_load(), current_cpu_load(), current_running_tasks(), network_usage(), active_tcp_connections()]);
-  const { total, ...memory_load } = memory_info;
+  const { total, ...memory_load } = current_memory_info();
   res.send({
     cpu: {
       specs: { 
-        core_num,
+        core_num: core_number() ,
         cores: {
-          ...core_cpu_specs, 
+          ...cpu_specs(), 
         },
       },
       load: {
-        average,
-        current
+        average: average_cpu_load(),
+        current: current_cpu_load()
       },
     },
     ram: {
@@ -93,10 +92,10 @@ app.get('/metrics', async (req, res) => {
       load: memory_load,
     },
     stats: {
-      tasks,
+      tasks: current_running_tasks(),
       network: {
-        usage,
-        active_tcp_connections: tcp_connections,
+        usage: network_usage(),
+        active_tcp_connections: active_tcp_connections()
       }
     }
   });
