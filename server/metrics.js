@@ -1,4 +1,4 @@
-import { current_memory_info } from "./modules/metrics.js";
+import { active_tcp_connections, average_cpu_load, core_number, cpu_specs, current_cpu_load, current_memory_info, current_running_tasks, network_usage } from "./modules/metrics.js";
 
 
 const { total, ...memory_load } = current_memory_info();
