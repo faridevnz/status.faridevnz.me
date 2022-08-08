@@ -66,14 +66,16 @@ const exec_command_pipe  = (commands = []) => {
  * @returns 
  */
 export const core_number = () => {
-  // run the command
-  const output = exec_command_pipe(CORE_NUMBER_CMDS);
-  // const output = spawnSync(CORE_NUMBER_CMD, { encoding: 'utf-8' });
-  if (!output) return 0;
-  // match groups
-  const groups = match_groups(output, CORE_NUMBER_REGEXP);
-  // return data
-  return Number(groups[0]);
+  return new Promise((resolve) => {
+    // run the command
+    const output = exec_command_pipe(CORE_NUMBER_CMDS);
+    // const output = spawnSync(CORE_NUMBER_CMD, { encoding: 'utf-8' });
+    if (!output) resolve(0);
+    // match groups
+    const groups = match_groups(output, CORE_NUMBER_REGEXP);
+    // return data
+    resolve(Number(groups[0]));
+  });
 }
 
 /**
@@ -81,20 +83,22 @@ export const core_number = () => {
  * @returns 
  */
 export const cpu_specs = () => {
-  // run the command
-  // const output = spawnSync(CPU_SPECS_CMD, { encoding: 'utf-8' });
-  const output = exec_command_pipe(CPU_SPECS_CMDS);
-  if (!output) return 0;
-  loggerInfo.info({ "CPU SPECS OUTPUT": output });
-  // match groups ( expected example: [[GenuineIntel, GenuineIntel], [2494.140, 2494.140], [4096, 4096]] )
-  const groups = [];
-  CPU_SPECS_REGEXPS.forEach(regexp => groups.push(match_groups(output, regexp)));
-  // return data
-  const result = [];
-  for ( let i = 0; i < core_number(); i++ ) {
-    result.push({ vendor_id: groups[0][i], frequency: `${groups[1][i]} MHz`, cache_size: `${groups[2][i]} KB` });
-  }
-  return result;
+  return new Promise((resolve) => {
+    // run the command
+    // const output = spawnSync(CPU_SPECS_CMD, { encoding: 'utf-8' });
+    const output = exec_command_pipe(CPU_SPECS_CMDS);
+    if (!output) resolve([]);
+    loggerInfo.info({ "CPU SPECS OUTPUT": output });
+    // match groups ( expected example: [[GenuineIntel, GenuineIntel], [2494.140, 2494.140], [4096, 4096]] )
+    const groups = [];
+    CPU_SPECS_REGEXPS.forEach(regexp => groups.push(match_groups(output, regexp)));
+    // return data
+    const result = [];
+    for ( let i = 0; i < core_number(); i++ ) {
+      result.push({ vendor_id: groups[0][i], frequency: `${groups[1][i]} MHz`, cache_size: `${groups[2][i]} KB` });
+    }
+    resolve(result);
+  })
 }
 
 /**
@@ -102,20 +106,22 @@ export const cpu_specs = () => {
  * @returns 
  */
 export const average_cpu_load = () => {
-  // run the command
-  // const output = spawnSync(AVG_CPU_LOAD_CMD, { encoding: 'utf-8' });
-  const output = exec_command_pipe(AVG_CPU_LOAD_CMDS);
-  if (!output) return 0;
-  // match groups
-  const groups = match_groups(output, AVG_CPU_LOAD_REGEXP);
-  loggerInfo.info({ groups: groups });
-  // return data
-  const result = {};
-  for ( let i = 0; i < core_number() + 1; i++ ) {
-    const core_number = groups[0 + (i*7)];
-    result[core_number] = { user: groups[1 + (i*7)], nice: groups[2 + (i*7)], system: groups[3 + (i*7)], iowait: groups[4 + (i*7)], steal: groups[5 + (i*7)], idle: groups[6 + (i*7)] };
-  }
-  return result;
+  return new Promise((resolve) => {
+    // run the command
+    // const output = spawnSync(AVG_CPU_LOAD_CMD, { encoding: 'utf-8' });
+    const output = exec_command_pipe(AVG_CPU_LOAD_CMDS);
+    if (!output) resolve({});
+    // match groups
+    const groups = match_groups(output, AVG_CPU_LOAD_REGEXP);
+    loggerInfo.info({ groups: groups });
+    // return data
+    const result = {};
+    for ( let i = 0; i < core_number() + 1; i++ ) {
+      const core_number = groups[0 + (i*7)];
+      result[core_number] = { user: groups[1 + (i*7)], nice: groups[2 + (i*7)], system: groups[3 + (i*7)], iowait: groups[4 + (i*7)], steal: groups[5 + (i*7)], idle: groups[6 + (i*7)] };
+    }
+    resolve(result);
+  })
 }
 
 /**
@@ -123,20 +129,22 @@ export const average_cpu_load = () => {
  * @returns 
  */
  export const current_cpu_load = () => {
-  // run the command
-  const output = exec_command_pipe(CURR_CPU_LOAD_CMDS);
-  if (!output) return 0;
-  loggerInfo.info({ ADD_LOG: output });
-  // match groups
-  const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
-  loggerInfo.info({ asd_groups: groups });
-  // return data
-  const result = {};
-  for ( let i = 0; i < core_number(); i++ ) {
-    const core_number = i;
-    result[core_number] = { user: groups[0 + (i*8)], system: groups[1 + (i*8)], nice: groups[2 + (i*8)], idle: groups[3 + (i*8)], iowait: groups[4 + (i*8)], hw_interrupts: groups[5 + (i*8)], sw_interrupts: groups[6 + (i*8)], stolen: groups[7 + (i*8)] };
-  }
-  return result;
+  return new Promise((resolve) => {
+    // run the command
+    const output = exec_command_pipe(CURR_CPU_LOAD_CMDS);
+    if (!output) resolve([]);
+    loggerInfo.info({ ADD_LOG: output });
+    // match groups
+    const groups = match_groups(output, CURR_CPU_LOAD_REGEXP);
+    loggerInfo.info({ asd_groups: groups });
+    // return data
+    const result = {};
+    for ( let i = 0; i < core_number(); i++ ) {
+      const core_number = i;
+      result[core_number] = { user: groups[0 + (i*8)], system: groups[1 + (i*8)], nice: groups[2 + (i*8)], idle: groups[3 + (i*8)], iowait: groups[4 + (i*8)], hw_interrupts: groups[5 + (i*8)], sw_interrupts: groups[6 + (i*8)], stolen: groups[7 + (i*8)] };
+    }
+    resolve(result);
+  })
 }
 
 /**
@@ -144,14 +152,16 @@ export const average_cpu_load = () => {
  * @returns
  */
 export const current_memory_info = () => {
-  // run the command
-  // const output = spawnSync(CURR_MEMORY_INFO_CMD, { encoding: 'utf-8' });
-  const output = exec_command_pipe(CURR_MEMORY_INFO_CMDS);
-  if (!output) return 0;
-  // match groups
-  const groups = match_groups(output, CURR_MEMORY_INFO_REGEXP);
-  // return data
-  return { total: groups[0], free: groups[1], used: groups[2], buff_or_cache: groups[3] };
+  return new Promise((resolve) => {
+    // run the command
+    // const output = spawnSync(CURR_MEMORY_INFO_CMD, { encoding: 'utf-8' });
+    const output = exec_command_pipe(CURR_MEMORY_INFO_CMDS);
+    if (!output) resolve({});
+    // match groups
+    const groups = match_groups(output, CURR_MEMORY_INFO_REGEXP);
+    // return data
+    resolve({ total: groups[0], free: groups[1], used: groups[2], buff_or_cache: groups[3] });
+  })
 }
 
 /**
@@ -159,14 +169,16 @@ export const current_memory_info = () => {
  * @returns 
  */
 export const current_running_tasks = () => {
-  // run the command
-  // const output = spawnSync(CURR_RUNNING_TASKS_CMD, { encoding: 'utf-8' });
-  const output = exec_command_pipe(CURR_RUNNING_TASKS_CMDS);
-  if (!output) return 0;
-  // match groups
-  const groups = match_groups(output, CURR_RUNNING_TASKS_REGEXP);
-  // return data
-  return { total: groups[0], running: groups[1], sleeping: groups[2], stopped: groups[3], zombie: groups[4] };
+  return new Promise((resolve) => {
+    // run the command
+    // const output = spawnSync(CURR_RUNNING_TASKS_CMD, { encoding: 'utf-8' });
+    const output = exec_command_pipe(CURR_RUNNING_TASKS_CMDS);
+    if (!output) resolve({});
+    // match groups
+    const groups = match_groups(output, CURR_RUNNING_TASKS_REGEXP);
+    // return data
+    resolve({ total: groups[0], running: groups[1], sleeping: groups[2], stopped: groups[3], zombie: groups[4] });
+  })
 }
 
 /**
@@ -183,23 +195,25 @@ export const current_running_tasks = () => {
  * %ifutil    - utilization percentage of the network interface
  */
 export const network_usage = () => {
-  // run the command
-  // const output = spawnSync(NET_USAGE_CMD, { encoding: 'utf-8' });
-  const output = exec_command_pipe(NET_USAGE_CMDS);
-  if (!output) return 0;
-  // match groups
-  const groups = match_groups(output, NET_USAGE_REGEXP);
-  // return data
-  return {
-    pack_rec_per_second: groups[0],
-    pack_sent_per_second: groups[1],
-    cpack_rec_per_second: groups[4],
-    cpack_sent_per_second: groups[5],
-    multicast_pack_rec_per_second: groups[6],
-    kb_rec_per_second: groups[2],
-    kb_sent_per_second: groups[3],
-    utilization_perc: groups[7],
-  }
+  return new Promise((resolve) => {
+    // run the command
+    // const output = spawnSync(NET_USAGE_CMD, { encoding: 'utf-8' });
+    const output = exec_command_pipe(NET_USAGE_CMDS);
+    if (!output) resolve({});
+    // match groups
+    const groups = match_groups(output, NET_USAGE_REGEXP);
+    // return data
+    resolve({
+      pack_rec_per_second: groups[0],
+      pack_sent_per_second: groups[1],
+      cpack_rec_per_second: groups[4],
+      cpack_sent_per_second: groups[5],
+      multicast_pack_rec_per_second: groups[6],
+      kb_rec_per_second: groups[2],
+      kb_sent_per_second: groups[3],
+      utilization_perc: groups[7],
+    })
+  });
 }
 
 /**
@@ -207,12 +221,14 @@ export const network_usage = () => {
  * @returns 
  */
 export const active_tcp_connections = () => {
-  // run the command
-  // const output = spawnSync(TCP_ACTIVE_CMD, { encoding: 'utf-8' });
-  const output = exec_command_pipe(TCP_ACTIVE_CMDS);
-  if (!output) return 0;
-  // match groups
-  const groups = match_groups(output, TCP_ACTIVE_REGEXP);
-  // return data
-  return groups;
+  return new Promise((resolve) => {
+    // run the command
+    // const output = spawnSync(TCP_ACTIVE_CMD, { encoding: 'utf-8' });
+    const output = exec_command_pipe(TCP_ACTIVE_CMDS);
+    if (!output) resolve([]);
+    // match groups
+    const groups = match_groups(output, TCP_ACTIVE_REGEXP);
+    // return data
+    resolve(groups);
+  });
 }
