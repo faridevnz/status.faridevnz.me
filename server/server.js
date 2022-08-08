@@ -16,14 +16,20 @@ import {
   network_usage, 
   active_tcp_connections
 } from './modules/metrics.js';
+import { WebSocketServer } from 'ws';
+
+
+// LOGGERS
 
 export const loggerInfo = pino({ write: './logs/info.log' });
 export const loggerError = pino({ write: './logs/info.log' });
+
 
 // VARIABLES
 
 const app = express();
 const Axios = axios.create();
+const connectedUsers = [];
 const defaultFileContent = {
   ping: [],
   failures: []
@@ -33,7 +39,7 @@ const defaultFileContent = {
 // ROUTES ( API )
 
 app.use(cors({ origin: '*' }));
-app.use(pinoHttp())
+app.use(pinoHttp());
 
 app.get('/sites', async (req, res) => {
   loggerInfo.info({a: 1}, 'hello');
@@ -175,7 +181,7 @@ const savePingResult = (site, { timestamp, value }) => {
 }
 
 // LISTEN SERVER
-app.listen(3333, () => {
+const server = app.listen(3333, () => {
   console.log('listening on port 3333');
   // PING THE ACTIVE SITES
   setInterval(async () => {
@@ -188,4 +194,50 @@ app.listen(3333, () => {
       });
     })
   }, 60000);
-})
+  // METRICS SCHEDULER
+  setInterval(async () => {
+    if ( connectedUsers.length ) {
+      const { total, ...memory_load } = current_memory_info();
+      const res = {
+          cpu: {
+            specs: { 
+              core_num: core_number() ,
+              cores: {
+                ...cpu_specs(), 
+              },
+            },
+            load: {
+              average: average_cpu_load(),
+              current: current_cpu_load()
+            },
+          },
+          ram: {
+            specs: {
+              total: total
+            },
+            load: memory_load,
+          },
+          stats: {
+            tasks: current_running_tasks(),
+            network: {
+              usage: network_usage(),
+              active_tcp_connections: active_tcp_connections()
+            }
+          }
+        };
+      connectedUsers.forEach(ws => ws.send(res));
+    }
+  }, 1000);
+});
+
+const wss = new WebSocketServer({ server, path: '/metrics' });
+
+//init Websocket ws and handle incoming connect requests
+wss.on('connection', function connection(ws) {
+    ws.send('message from server at: ' + new Date());
+    connectedUsers.push(ws);
+    //on connect message
+    ws.on('message', function incoming(message) {
+        console.log('received: %s', message);
+    });
+});
