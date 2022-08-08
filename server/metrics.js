@@ -1,4 +1,4 @@
-import { current_memory_info } from "./modules/metrics";
+import { current_memory_info } from "./modules/metrics.js";
 
 
 const { total, ...memory_load } = current_memory_info();
