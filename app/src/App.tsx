@@ -2,6 +2,9 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CpuCard } from './components/CpuCard/CpuCard';
+import { parseMetrics } from './utils/parseMetrics';
+import { RamCard } from './components/RamCard/RamCard';
+import { TcpCard } from './components/TcpCard/TcpCard';
 
 function App() {
   // sites
@@ -11,7 +14,7 @@ function App() {
   // metrics
   const [metrics, setMetrics] = useState<any>({});
   // current IP
-  const [IP, setIP] = useState({});
+  const [IP, setIP] = useState('');
 
   // FUNCTIONS
   
@@ -30,17 +33,16 @@ function App() {
     axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.access))
   }
 
-
-  // MAPPERS
-
-  const map_tcp_connections = (connections = []) => {
-    return connections.reduce((acc: any, ip: string) => {
-      if (acc[`${ip}`] !== undefined) acc[`${ip}`]++;
-      else acc[`${ip}`] = 1;
-      return acc;
-    }, {});
+  const fetchMetrics = () => {
+    // take the current IP
+    axios.get('https://geolocation-db.com/json/').then(res => {
+      setIP(res.data.IPv4);
+    });
+    // take metrics
+    axios.get('https://status.faridevnz.me/api/metrics').then(res => {
+      setMetrics(parseMetrics(res.data));
+    });
   }
-
 
   // EFFECTS
 
@@ -54,25 +56,9 @@ function App() {
   }, []);
 
   useEffect(() => {
+    fetchMetrics();
     const interval = setInterval(() => {
-      // take the current IP
-      axios.get('https://geolocation-db.com/json/').then(res => {
-        setIP(res.data.IPv4);
-      });
-      // take metrics
-      axios.get('https://status.faridevnz.me/api/metrics').then(res => {
-        const tcp_conn = map_tcp_connections(res.data.stats.network.active_tcp_connections);
-        setMetrics({ 
-          ...res.data, 
-          stats: { 
-            ...res.data.stats, 
-            network: { 
-              ...res.data.stats.network, 
-              active_tcp_connections: tcp_conn
-            } 
-          } 
-        });
-      })
+      fetchMetrics();
     }, 3000);
     return () => clearInterval(interval);
   }, []);
@@ -163,6 +149,7 @@ function App() {
               <span className='section-title'>METRICS</span>
             </div>
             <br />
+            <br />
             <span className='section-subtitle'>CPU</span>
             <div className='cpus-container'>
               { Object.entries(metrics?.cpu?.specs.cores ?? {}).map(([core_name, specs]: [string, any]) => 
@@ -178,28 +165,32 @@ function App() {
               ) }
             </div>
             <br />
-            <br />
             <span className='section-subtitle'>RAM</span>
+            <div className='ram-container'>
+              <RamCard
+                size={metrics?.ram?.specs.total} 
+                free={metrics?.ram?.load.free} 
+                buff_or_cache={metrics?.ram?.load.buff_or_cache}
+                used={metrics?.ram?.load.used}
+              />
+            </div>
             <br />
             <br />
             <span className='section-subtitle'>STATS</span>
             <br />
             <br />
-            <div>TASKS</div>
+            {/* <div>TASKS</div>
             <br />
             <div>total: { metrics?.stats?.tasks.total }</div>
             <div>running: { metrics?.stats?.tasks.running }</div>
             <div>sleeping: { metrics?.stats?.tasks.sleeping }</div>
             <div>stopped: { metrics?.stats?.tasks.stopped }</div>
             <div>zombie: { metrics?.stats?.tasks.zombie }</div>
-            <br />
-            <br />
-            <div>TPC CONNECTIONS</div>
-            { Object.entries(metrics?.stats?.network.active_tcp_connections ?? {}).map(([ip, count]) => 
-              <div key={ip}>
-                <>{ ip } - { count } { ip === IP ? '- current': '' }</>
-              </div>
-            ) }
+            <br /> */}
+              <TcpCard 
+                ips={metrics?.stats?.network.active_tcp_connections}
+                current_ip={IP}
+              />
             <br />
           </div>
         </div>

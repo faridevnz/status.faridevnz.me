@@ -1,41 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './CpuCard.scss';
-import cpuicon from  '../../assets/icons/cpuicon.svg';
 
 export const CpuCard: React.FC<{ name: string, vendor: string, cache: string, frequency: string, load: number }> = ({ name, vendor, cache, frequency, load }) => {
-  
+  // STATE
+  const [color, setColor] = useState('core-heavy');
+
   // FUNCTIONS
-  
-  const calculateBackgroundColor: () =>  string = () => {
-    console.log(load)
-    if ( load < 10 ) return '#94FF40';
-    else if ( load >= 10 && load < 20 ) return '#B6FF40';
-    else if ( load >= 20 && load < 35 ) return '#E4FF40';
-    else if ( load >= 35 && load < 60 ) return '#FFEC40';
-    else if ( load >= 60 && load < 75 ) return '#FFB340';
-    else if ( load >= 75 && load < 90 ) return '#FF7A00';
-    else return '#FF3D00';
+  const calculateBackgroundColor: (load: number) =>  string = (load: number) => {
+    if ( load < 5 ) return 'extralight';
+    else if ( load >= 5 && load < 15 ) return 'light';
+    else if ( load >= 15 && load < 25 ) return 'semilight';
+    else if ( load >= 25 && load < 60 ) return 'medium';
+    else if ( load >= 60 && load < 75 ) return 'semiheavy';
+    else if ( load >= 75 && load < 90 ) return 'heavy';
+    else return 'extraheavy';
   }
+
+  // EFFECTS
+  useEffect(() => {
+    setColor(calculateBackgroundColor(load));
+  }, [load]);
 
 
   // RENDER
-
   return (
-    <div className="CpuCard">
-      {/* icon */}
-      <div className='CpuCard__image'>
-        <img src={cpuicon} width="100" height="100" />
+    <div className="cpu-card flex flex-col justify-between">
+      {/* header */}
+      <div className='flex justify-between items-end'>
+        <span className='corename'>Core {name}</span>
+        <span className='text-xs'>{vendor}</span>
       </div>
-      {/* content */}
-      <div className='CpuCard__content'>
-        <div>Core { name }</div>
-        <div>{ vendor }</div>
-        <div>{ cache } cache</div>
-        <div>{ frequency }</div>
+      {/* infos */}
+      <div className='flex justify-between items-center mt-1'>
+        <div>
+          <div className='text-xs'>{frequency.split(' ')[0]}<span className='font-light ml-2'>MHz</span></div>
+          <div className='text-xs'>4096<span className='font-light ml-2'>KB cache</span></div>
+        </div>
+        <div className={`text-3xl text-${color}`}>{Math.floor(load)} <span className='text-black font-light'>%</span></div>
       </div>
-      {/* load bar */}
-      <div className='CpuCard__bar-container'>
-        <div className='CpuCard__bar' style={{right: `${100-load}%`, backgroundColor: calculateBackgroundColor() }}></div>
+      {/* bar */}
+      <div className='w-full h-4 mt-1'>
+        <div className='w-full h-full bg-core'>
+          <div className={`h-full core-${color}`} style={{ width: `${Math.floor(load)}%`, color: `bg-${'core-light'}` }}></div>
+        </div>
       </div>
     </div>
   );
