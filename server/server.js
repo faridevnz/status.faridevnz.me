@@ -41,7 +41,7 @@ app.use(cors({ origin: '*' }));
 app.use(pinoHttp());
 
 app.get('/health/ping', async (req, res) => {
-  res.send(1);
+  res.send({ status: 1 });
 });
 
 app.get('/sites', async (req, res) => {
