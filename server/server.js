@@ -107,8 +107,8 @@ const getDirectories = async source =>
 (await pfs.readdir(source, { withFileTypes: true }))
   .filter(dirent => 
     dirent.isDirectory() && 
-    dirent.name.includes('faridevnz.me') && 
-    dirent.name !== 'status.faridevnz.me'
+    dirent.name.includes('faridevnz.me')
+    // dirent.name !== 'status.faridevnz.me'
   )
   .map(dirent => dirent.name)
 

@@ -24,7 +24,8 @@ module.exports = {
         'core-semiheavy': '#FFB340',
         'core-heavy': '#FF7A00',
         'core-extraheavy': '#FF3D00',
-        'core': '#F3F3F3'
+        'core': '#F3F3F3',
+        'page-background': '#F6F8FA'
       },
       spacing: {
         ...generatePercentageWidth()

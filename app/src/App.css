@@ -25,23 +25,19 @@
 
 /* CONTENT */
 .content {
-  display: flex;
-  justify-content: center;
-  width: 100%;
   background-color: #F6F8FA;
 }
-.section-container {
-  min-height: calc(100vh - 100px);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 50px 0;
-  box-sizing: border-box;
-  gap: 10px;
-}
-.section-col {
+
+.section-col-large {
   width: 600px;
   padding: 50px;
   box-sizing: border-box;
+}
+.section-col-small {
+  width: calc(100% - 40px);
+  padding: 30px;
+  box-sizing: border-box;
+  margin: 0 20px;
 }
 .ping-section {
   background-color: white;
@@ -67,8 +63,6 @@
 .cpus-container {
   width: max-content;
   margin-top: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   /* gap: 20px; */
 }
 .ram-container {
@@ -76,24 +70,8 @@
   margin-top: 20px;
 }
 
-.card {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 10px 0;
-}
-.card-header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.card-header .log-link:nth-child(2) {
-  margin-right: 20px;
-}
 .log-link {
   font-size: 10px;
-  margin: 0 5px;
   font-weight: 500;
   color: #FF005C;
   text-decoration: underline;
@@ -101,15 +79,11 @@
   user-select: none;
 }
 
-.item-ping-card {
-  padding: 5px 0;
-}
 
 .item {
   width: 4px;
   height: 28px;
   background-color: grey;
-  margin: 0 1px;
 }
 
 .item--orange {

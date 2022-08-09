@@ -22,15 +22,15 @@ function App() {
     return new Array(rest).fill({ value: 0 }).concat(items);
   }
 
-  const onTakeErrorLog = (site: string, type: string) => {
-    const host = site.split('/')[0] ?? site;
-    axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.error))
-  }
+  // const onTakeErrorLog = (site: string, type: string) => {
+  //   const host = site.split('/')[0] ?? site;
+  //   axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.error))
+  // }
 
-  const onTakeAccessLog = (site: string, type: string) => {
-    const host = site.split('/')[0] ?? site;
-    axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.access))
-  }
+  // const onTakeAccessLog = (site: string, type: string) => {
+  //   const host = site.split('/')[0] ?? site;
+  //   axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.access))
+  // }
 
   // API
   const fetchMetrics = () => {
@@ -79,91 +79,82 @@ function App() {
   // RENDER
 
   return (
-    <div>
+    <div className='app'>
+      {/* HEADER */}
       <div className='header'>
         <span className='title'>Wundart</span><span className='subtitle'>system status</span>
       </div>
-      <div className='content'>
-        <div className='section-container flex flex-col lg:grid'>
+      {/* CONTENT */}
+      <div className='bg-page-background min-h-[calc(100vh_-_100px)] w-full p-8 flex flex-col md:p-12 md:grid md:grid-cols-2'>
+        <div className='flex justify-end'>
           {/* FRONTEND AND BACKEND AND PREVIEW */}
-          <div className='section-col ping-section'>
+          <div className='section ping-section w-full p-8 md:w-[580px] md:p-[50px]'>
+            
             {/* FRONTEND */}
             <span className='section-title'>FRONTEND</span>
-            <br />
-            <br />
-            <br />
+            <div className='mt-7'></div>
             { frontends.map((site, index) => 
-              <div key={index} className='item-ping-card'>
-                <div className='card-header'>
+              <div key={index} className='mb-3'>
+                <div className='flex justify-between items-end mb-1'>
                   <span>{ site.sitename.split('.')[0] }</span>
-                  <span>
-                    <span className='log-link' onClick={() => onTakeErrorLog(site.site, 'frontend')}>error log</span>
-                    <span className='log-link' onClick={() => onTakeAccessLog(site.site, 'frontend')}>access log</span>
-                  </span>
+                  <span className='log-link mb-1' onClick={() => window.open(site.uri, '_blank')}>{ `visit ${site.sitename.split('.')[0]} frontend` }</span>
                 </div>
-                <div className="card" key={index}>
+                <div className="grid grid-cols-[repeat(40,_minmax(0,_1fr))] gap-1 md:gap-0 md:flex" key={index}>
                   { site.tracking.ping.map((ping: any, index: number) =>
-                    <div className={`item ${ping.value === 0 ? 'item--light-grey' : ''} ${ping.value > 0.100 ? 'item--orange' : 'item--green'} ${ping.value === null ? 'item--red' : ''}`} key={index}></div>
+                    <div className={`item md:m-[1px] ${ping.value === 0 ? 'item--light-grey' : ''} ${ping.value > 0.100 ? 'item--orange' : 'item--green'} ${ping.value === null ? 'item--red' : ''}`} key={index}></div>
                   ) }
                 </div>
               </div>
             ) }
+            
             {/* BACKEND */}
-            <br />
-            <br />
+            <div className='mt-12'></div>
             <span className='section-title'>BACKEND</span>
-            <br />
-            <br />
-            <br />
+            <div className='mt-7'></div>
             { backends.map((site, index) => 
-              <div key={index} className='item-ping-card'>
-                <div className='card-header'>
+              <div key={index} className='mb-3'>
+                <div className='flex justify-between items-end mb-1'>
                   <span>{ site.sitename.split('.')[0] }</span>
-                  <span>
-                  <span className='log-link' onClick={() => onTakeErrorLog(site.site, 'backend')}>error log</span>
-                    <span className='log-link' onClick={() => onTakeAccessLog(site.site, 'backend')}>access log</span>
-                  </span>
+                  <span className='log-link' onClick={() => window.open(site.uri, '_blank')}>{ `visit ${site.sitename.split('.')[0]} backend` }</span>
                 </div>
-                <div className="card" key={index}>
+                <div className="grid grid-cols-[repeat(40,_minmax(0,_1fr))] gap-1 md:gap-0 md:flex" key={index}>
                   { site.tracking.ping.map((ping: any, index: number) =>
-                    <div className={`item ${ping.value === 0 ? 'item--light-grey' : ''} ${ping.value > 0.100 ? 'item--orange' : 'item--green'} ${ping.value === null ? 'item--red' : ''}`} key={index}></div>
+                    <div className={`item md:m-[1px] ${ping.value === 0 ? 'item--light-grey' : ''} ${ping.value > 0.100 ? 'item--orange' : 'item--green'} ${ping.value === null ? 'item--red' : ''}`} key={index}></div>
                     ) }
                 </div>
               </div>
             ) }
+            
             {/* PREVIEW */}
-            <br />
-            <br />
+            <div className='mt-12'></div>
             <span className='section-title'>PREVIEW</span>
-            <br />
-            <br />
-            <br />
+            <div className='mt-7'></div>
             { previews.map((site, index) => 
-              <div key={index} className='item-ping-card'>
-                <div className='card-header'>
+              <div key={index} className='mb-3'>
+                <div className='flex justify-between items-end mb-1'>
                   <span>{ site.sitename.split('.')[0] }</span>
-                  <span>
-                  <span className='log-link' onClick={() => onTakeErrorLog(site.site, 'preview')}>error log</span>
-                    <span className='log-link' onClick={() => onTakeAccessLog(site.site, 'preview')}>access log</span>
-                  </span>
+                  <span className='log-link' onClick={() => window.open(site.uri, '_blank')}>{ `visit ${site.sitename.split('.')[0]}` }</span>
                 </div>
-                <div className="card" key={index}>
+                <div className="grid grid-cols-[repeat(40,_minmax(0,_1fr))] gap-1 md:gap-0 md:flex" key={index}>
                   { site.tracking.ping.map((ping: any, index: number) =>
-                    <div className={`item ${ping.value === 0 ? 'item--light-grey' : ''} ${ping.value > 0.100 ? 'item--orange' : 'item--green'} ${ping.value === null ? 'item--red' : ''}`} key={index}></div>
+                    <div className={`item md:m-[1px] ${ping.value === 0 ? 'item--light-grey' : ''} ${ping.value > 0.100 ? 'item--orange' : 'item--green'} ${ping.value === null ? 'item--red' : ''}`} key={index}></div>
                   ) }
                 </div>
               </div>
             ) }
           </div>
+        </div>
+
+        <div>
+          
           {/* METRICS */}
-          <div className='section-col'>
-            <div>
+          <div className='w-full p-8 pl-0 md:w-[580px] md:p-[50px]'>
+            <div className='mb-10'>
               <span className='section-title'>METRICS</span>
             </div>
-            <br />
-            <br />
+            {/* cpu */}
             <span className='section-subtitle'>CPU</span>
-            <div className='cpus-container'>
+            <div className='w-fit md:grid md:grid-cols-2 mt-5 mb-10'>
               { Object.entries(metrics?.cpu?.specs.cores ?? {}).map(([core_name, specs]: [string, any]) => 
                 // <div key={core_name}>Core {core_name} - vendor: { specs.vendor_id } cache: { specs.cache_size } - { specs.frequency }</div>
                 <CpuCard 
@@ -176,9 +167,9 @@ function App() {
                 />
               ) }
             </div>
-            <br />
+            {/* ram */}
             <span className='section-subtitle'>RAM</span>
-            <div className='ram-container'>
+            <div className='ram-container mt-5 mb-10'>
               <RamCard
                 size={metrics?.ram?.specs.total} 
                 free={metrics?.ram?.load.free} 
@@ -186,25 +177,16 @@ function App() {
                 used={metrics?.ram?.load.used}
               />
             </div>
-            <br />
-            <br />
+            {/* stats */}
             <span className='section-subtitle'>STATS</span>
-            <br />
-            <br />
-            {/* <div>TASKS</div>
-            <br />
-            <div>total: { metrics?.stats?.tasks.total }</div>
-            <div>running: { metrics?.stats?.tasks.running }</div>
-            <div>sleeping: { metrics?.stats?.tasks.sleeping }</div>
-            <div>stopped: { metrics?.stats?.tasks.stopped }</div>
-            <div>zombie: { metrics?.stats?.tasks.zombie }</div>
-            <br /> */}
+            <div className='mt-5'>
               <TcpCard 
                 ips={metrics?.stats?.network.active_tcp_connections}
                 current_ip={IP}
               />
-            <br />
+            </div>
           </div>
+          
         </div>
       </div>
     </div>

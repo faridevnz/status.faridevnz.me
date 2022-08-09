@@ -37,7 +37,7 @@ export const RamCard: React.FC<{ size: number, free: number, buff_or_cache: numb
     <div className="ram-card flex flex-col justify-between">
       {/* header */}
       <div className='flex justify-start items-end'>
-        <span className='corename'>{megaToGiga(size, 1)} GB</span>
+        <span className='corename'>{megaToGiga(size, 2)} GB</span>
       </div>
       {/* infos */}
       <div className='flex justify-between items-center mt-1'>

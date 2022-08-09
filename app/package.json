@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
     "build:staging": "tsc && vite build --mode staging",
     "build:testing": "tsc && vite build --mode testing",
