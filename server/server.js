@@ -40,6 +40,10 @@ const defaultFileContent = {
 app.use(cors({ origin: '*' }));
 app.use(pinoHttp());
 
+app.get('/health/ping', async (req, res) => {
+  res.send(1);
+});
+
 app.get('/sites', async (req, res) => {
   loggerInfo.info({a: 1}, 'hello');
   const sites = await getSites();
