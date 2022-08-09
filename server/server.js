@@ -67,7 +67,7 @@ app.get('/sites/:host/:type/logs', async (req, res) => {
   res.send({
     error: fs.readFileSync(error_log_path, 'utf-8'),
     access: fs.readFileSync(access_log_path, 'utf-8')
-  })
+  });
 });
 
 app.get('/metrics', async (req, res) => {
@@ -201,17 +201,5 @@ const server = app.listen(3333, () => {
   // CALCULATE METRICS
   setInterval(async () => {
     calculateMetrics();
-  }, 3);
-});
-
-const wss = new WebSocketServer({ server, path: '/metrics' });
-
-//init Websocket ws and handle incoming connect requests
-wss.on('connection', function connection(ws) {
-    ws.send('message from server at: ' + new Date());
-    connectedUsers.push(ws);
-    //on connect message
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-    });
+  }, 3000);
 });

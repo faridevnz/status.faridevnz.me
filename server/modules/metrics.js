@@ -22,7 +22,7 @@ const AVG_CPU_LOAD_CMDS = [{ cmd: 'sar', params: ['-P', 'ALL', '0'] }];
 const AVG_CPU_LOAD_REGEXP = /(\d+|all)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+/gm;
 // CPU, user, nice, system, iowait, steal, idle
 
-// average cpus % load
+// current cpus % load
 // const CURR_CPU_LOAD_CMD = 'top -bcn1 -1 -w512 | grep '^%Cpu'';
 const CURR_CPU_LOAD_CMDS = [{ cmd: 'top', params: ['-bcn1', '-1', '-w512'] }, { cmd: 'grep', params: ['^%Cpu'] }];
 const CURR_CPU_LOAD_REGEXP = /(\d+\.\d+)\s*us,\s*(\d+\.\d+)\ssy,\s*(\d+\.\d+)\sni,\s*(\d+\.\d+)\sid,\s*(\d+\.\d+)\s*wa,\s*(\d+\.\d+)\s*hi,\s*(\d+\.\d+)\ssi,\s*(\d+\.\d+)\sst\s*/gm;
