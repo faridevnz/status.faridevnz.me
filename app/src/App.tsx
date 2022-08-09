@@ -17,7 +17,6 @@ function App() {
   const [IP, setIP] = useState('');
 
   // FUNCTIONS
-  
   const exact70 = (items = []) => {
     const rest = 80 - items.length;
     return new Array(rest).fill({ value: 0 }).concat(items);
@@ -33,33 +32,46 @@ function App() {
     axios.get(`https://status.faridevnz.me/api/sites/${host}/${type}/logs`).then(res => console.log(res.data.access))
   }
 
+  // API
   const fetchMetrics = () => {
-    // take the current IP
-    axios.get('https://geolocation-db.com/json/').then(res => {
-      setIP(res.data.IPv4);
-    });
     // take metrics
     axios.get('https://status.faridevnz.me/api/metrics').then(res => {
       setMetrics(parseMetrics(res.data));
     });
   }
 
-  // EFFECTS
+  const fetchCurrentIp = () => {
+    axios.get('https://geolocation-db.com/json/').then(res => {
+      setIP(res.data.IPv4);
+    });
+  }
 
-  useEffect(() => {
-    // take active sites
+  const takeActiveSites = () => {
     axios.get('https://status.faridevnz.me/api/sites').then(res => {
       setFrontends(res.data.filter((site: any) => site.type === 'frontend').map((item: any) => ({ ...item, tracking: { ...item.tracking, ping: exact70(item.tracking.ping) }})));
       setBackends(res.data.filter((site: any) => site.type === 'backend').map((item: any) => ({ ...item, tracking: { ...item.tracking, ping: exact70(item.tracking.ping) }})));
       setPreviews(res.data.filter((site: any) => site.type === 'preview').map((item: any) => ({ ...item, tracking: { ...item.tracking, ping: exact70(item.tracking.ping) }})));
     });
+  }
+  
+  // EFFECTS
+  useEffect(() => {
+    // take current ip
+    fetchCurrentIp();
+    // take active sites
+    takeActiveSites();
+    const interval = setInterval(() => {
+      takeActiveSites();
+      fetchCurrentIp();
+    }, 20000); // 20s
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     fetchMetrics();
     const interval = setInterval(() => {
       fetchMetrics();
-    }, 3000);
+    }, 3000); // 3s
     return () => clearInterval(interval);
   }, []);
 

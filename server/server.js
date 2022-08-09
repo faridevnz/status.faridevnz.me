@@ -29,7 +29,6 @@ export const loggerError = pino({ write: './logs/info.log' });
 
 const app = express();
 const Axios = axios.create();
-const connectedUsers = [];
 let metrics = {};
 const defaultFileContent = {
   ping: [],
@@ -44,16 +43,16 @@ app.use(pinoHttp());
 app.get('/sites', async (req, res) => {
   loggerInfo.info({a: 1}, 'hello');
   const sites = await getSites();
-  const result = []
+  const result = [];
   sites.forEach((site) => {
-    const type = /manage/.test(site) ? 'backend' : /preview/.test(site) ? 'preview' : 'frontend';
+    const type = /api/.test(site) ? 'backend' : /preview/.test(site) ? 'preview' : 'frontend';
     const sitename = type === 'backend' ? site.split('/')[0] + '.backend' : site + '.frontend';
     result.push({
       type,
       site,
       uri: `https://${site}`,
       sitename,
-      tracking: JSON.parse(fs.readFileSync(`./ping-results/${sitename}.json`, 'utf-8'))
+      tracking: (fs.existsSync(`./ping-results/${sitename}.json`)) ? JSON.parse(fs.readFileSync(`./ping-results/${sitename}.json`, 'utf-8')) : {}
     })
   })
   res.send(result);
@@ -133,7 +132,7 @@ const getSites = async () => {
 
 const savePingResult = (site, { timestamp, value }) => {
   // determine sitename for frontend and backend
-  const sitename = /manage/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend';
+  const sitename = /api/.test(site) ? site.split('/')[0] + '.backend' : site + '.frontend';
   // if file does not exists, create it ( host.json )
   if (!fs.existsSync(`./ping-results/${sitename}.json`)) {
     fs.writeFileSync(`./ping-results/${sitename}.json`, JSON.stringify(defaultFileContent), 'utf-8')
