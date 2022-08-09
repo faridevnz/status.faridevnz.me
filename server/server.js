@@ -30,11 +30,11 @@ export const loggerError = pino({ write: './logs/info.log' });
 const app = express();
 const Axios = axios.create();
 const connectedUsers = [];
+let metrics = {};
 const defaultFileContent = {
   ping: [],
   failures: []
 }
-
 
 // ROUTES ( API )
 
@@ -71,34 +71,7 @@ app.get('/sites/:host/:type/logs', async (req, res) => {
 });
 
 app.get('/metrics', async (req, res) => {
-  const { total, ...memory_load } = current_memory_info();
-  res.send({
-    cpu: {
-      specs: { 
-        core_num: core_number() ,
-        cores: {
-          ...cpu_specs(), 
-        },
-      },
-      load: {
-        average: average_cpu_load(),
-        current: current_cpu_load()
-      },
-    },
-    ram: {
-      specs: {
-        total: total
-      },
-      load: memory_load,
-    },
-    stats: {
-      tasks: current_running_tasks(),
-      network: {
-        usage: network_usage(),
-        active_tcp_connections: active_tcp_connections()
-      }
-    }
-  });
+  res.send(metrics);
 });
 
 
@@ -180,6 +153,37 @@ const savePingResult = (site, { timestamp, value }) => {
   fs.writeFileSync(`./ping-results/${sitename}.json`, JSON.stringify(content), 'utf-8')
 }
 
+const calculateMetrics = () => {
+  const { total, ...memory_load } = current_memory_info();
+  metrics = {
+    cpu: {
+      specs: { 
+        core_num: core_number() ,
+        cores: {
+          ...cpu_specs(), 
+        },
+      },
+      load: {
+        average: average_cpu_load(),
+        current: current_cpu_load()
+      },
+    },
+    ram: {
+      specs: {
+        total: total
+      },
+      load: memory_load,
+    },
+    stats: {
+      tasks: current_running_tasks(),
+      network: {
+        usage: network_usage(),
+        active_tcp_connections: active_tcp_connections()
+      }
+    }
+  };
+}
+
 // LISTEN SERVER
 const server = app.listen(3333, () => {
   console.log('listening on port 3333');
@@ -194,6 +198,10 @@ const server = app.listen(3333, () => {
       });
     })
   }, 60000);
+  // CALCULATE METRICS
+  setInterval(async () => {
+    calculateMetrics();
+  }, 3);
 });
 
 const wss = new WebSocketServer({ server, path: '/metrics' });
