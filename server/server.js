@@ -128,7 +128,7 @@ const getSites = async () => {
     }
     // identify backend
     if ( fs.existsSync(`/var/www/${directories[i]}/server`) ) {
-      sites.push(`${directories[i]}/api/manage/info`);
+      sites.push(`${directories[i]}/api/health/ping`);
     }
   }
   return sites;
@@ -188,7 +188,7 @@ const calculateMetrics = () => {
 }
 
 // LISTEN SERVER
-const server = app.listen(3333, () => {
+app.listen(3333, () => {
   console.log('listening on port 3333');
   // PING THE ACTIVE SITES
   setInterval(async () => {
