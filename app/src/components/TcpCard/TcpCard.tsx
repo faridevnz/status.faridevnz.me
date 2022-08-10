@@ -13,7 +13,7 @@ export const TcpCard: React.FC<{ ips: {[key: string]: number}, current_ip: strin
 
   // RENDER
   return (
-    <div className="tcp-card flex flex-col justify-between">
+    <div className="tcp-card flex flex-col justify-between dark:bg-header-dark dark:text-white">
       {/* header */}
       <div className='flex justify-start items-end'>
         <span className='corename'>TCP CONN.</span>

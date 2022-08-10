@@ -11,6 +11,7 @@ const generatePercentageWidth = () => {
 //eslint-disable-next-line
 module.exports = {
   content: ['./src/**/*.{ts,tsx,sass}'],
+  darkMode: 'class',
   theme: {
     extend: {
       animation: {
@@ -25,7 +26,11 @@ module.exports = {
         'core-heavy': '#FF7A00',
         'core-extraheavy': '#FF3D00',
         'core': '#F3F3F3',
-        'page-background': '#F6F8FA'
+        'page-background': '#F6F8FA',
+        'page-dark': "#141617",
+        // 'header-dark': "#161819"
+        'header-dark': "#161819",
+        'loading-bar-dark': "#1B1E1F"
       },
       spacing: {
         ...generatePercentageWidth()

@@ -24,7 +24,7 @@ export const CpuCard: React.FC<{ name: string, vendor: string, cache: string, fr
 
   // RENDER
   return (
-    <div className="cpu-card flex flex-col justify-between">
+    <div className="cpu-card flex flex-col justify-between dark:bg-header-dark dark:text-white">
       {/* header */}
       <div className='flex justify-between items-end'>
         <span className='corename'>Core {name}</span>
@@ -36,11 +36,11 @@ export const CpuCard: React.FC<{ name: string, vendor: string, cache: string, fr
           <div className='text-xs'>{frequency.split(' ')[0]}<span className='font-light ml-2'>MHz</span></div>
           <div className='text-xs'>4096<span className='font-light ml-2'>KB cache</span></div>
         </div>
-        <div className={`text-3xl text-${color}`}>{Math.floor(load)} <span className='text-black font-light'>%</span></div>
+        <div className={`text-3xl text-${color}`}>{Math.floor(load)} <span className='text-black dark:text-white font-light'>%</span></div>
       </div>
       {/* bar */}
       <div className='w-full h-4 mt-1'>
-        <div className='w-full h-full bg-core'>
+        <div className='w-full h-full bg-core dark:bg-loading-bar-dark'>
           <div className={`h-full core-${color}`} style={{ width: `${Math.floor(load)}%`, color: `bg-${'core-light'}` }}></div>
         </div>
       </div>

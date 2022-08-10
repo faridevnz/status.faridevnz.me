@@ -34,7 +34,7 @@ export const RamCard: React.FC<{ size: number, free: number, buff_or_cache: numb
 
   // RENDER
   return (
-    <div className="ram-card flex flex-col justify-between">
+    <div className="ram-card flex flex-col justify-between dark:bg-header-dark dark:text-white">
       {/* header */}
       <div className='flex justify-start items-end'>
         <span className='corename'>{megaToGiga(size, 2)} GB</span>
@@ -50,11 +50,11 @@ export const RamCard: React.FC<{ size: number, free: number, buff_or_cache: numb
             <span className='font-light ml-1'>MB</span>
           </div>
         </div>
-        <div className={`text-3xl text-${color}`}>{megaToGiga(used, 3)} <span className='text-black font-light'>GB</span></div>
+        <div className={`text-3xl text-${color}`}>{megaToGiga(used, 3)} <span className='text-black dark:text-white font-light'>GB</span></div>
       </div>
       {/* bar */}
       <div className='w-full h-4 mt-1'>
-        <div className='w-full h-full bg-core'>
+        <div className='w-full h-full bg-core dark:bg-loading-bar-dark'>
           <div className={`h-full core-${color}`} style={{ width: `${usedPercentage}%`, color: `bg-${'core-light'}` }}></div>
         </div>
       </div>
