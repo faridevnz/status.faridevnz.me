@@ -81,8 +81,12 @@ function App() {
   return (
     <div className='app'>
       {/* HEADER */}
-      <div className='header'>
-        <span className='title'>Wundart</span><span className='subtitle'>system status</span>
+      <div className='flex justify-between items-center px-12' style={{ height: '100px' }}>
+        <span className='text-3xl flex flex-col items-center md:flex-row md:text-4xl font-extrabold'>
+          <span>Wundart</span>
+          <span className='subtitle -ml-5 -mt-1 text-sm md:ml-3 md:mt-1 md:text-lg'>system status</span>
+        </span>
+        <div className='ml-5 w-28 h-10 flex items-center justify-center rounded-md bg-slate-800 text-white cursor-pointer' onClick={() => window.open('https://wiki.faridevnz.me')}>visit wiki</div>
       </div>
       {/* CONTENT */}
       <div className='bg-page-background min-h-[calc(100vh_-_100px)] w-full p-8 flex flex-col md:p-12 md:grid md:grid-cols-2'>
