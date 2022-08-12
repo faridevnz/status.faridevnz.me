@@ -16,7 +16,6 @@ import {
   network_usage, 
   active_tcp_connections
 } from './modules/metrics.js';
-import { WebSocketServer } from 'ws';
 
 
 // LOGGERS
@@ -45,7 +44,6 @@ app.get('/health/ping', async (req, res) => {
 });
 
 app.get('/sites', async (req, res) => {
-  loggerInfo.info({a: 1}, 'hello');
   const sites = await getSites();
   const result = [];
   sites.forEach((site) => {

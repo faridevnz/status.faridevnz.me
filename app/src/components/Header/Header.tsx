@@ -17,7 +17,7 @@ export const Header = () => {
       </span>
       <div className='flex items-center cursor-pointer'>
         <div onClick={() => changeMode(mode === 'dark' ? 'light' : 'dark')}>
-          { ( mode === 'light' ? <img src={DarkMode} width="20"></img> : <img src={LightMode} width="20"></img> ) }
+          { ( mode === 'light' ? <img src={LightMode} width="20"></img> : <img src={DarkMode} width="20"></img> ) }
         </div>
         <div className='ml-5 w-20 h-10 flex items-center justify-center rounded-md md:w-28 bg-slate-800 text-white cursor-pointer' onClick={() => window.open('https://wiki.faridevnz.me')}>visit wiki</div>
       </div>
